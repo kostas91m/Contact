@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using MGroup.Constitutive.Structural;
 using MGroup.LinearAlgebra.Matrices;
@@ -25,14 +25,14 @@ namespace MGroup.FEM.Structural.Line
 			this.penaltyFactor = penaltyFactorMultiplier * youngModulus;
 			this.DisplacementVector = new double[4];
 			this.ContactArea = contactArea;
-			Nodes = nodes;
+			this.Nodes = nodes;
 		}
 		public ContactNodeToNode2D(IReadOnlyList<INode> nodes, double penaltyFactor, double contactArea)
 		{
 			this.penaltyFactor = penaltyFactor;
 			this.DisplacementVector = new double[4];
 			this.ContactArea = contactArea;
-			Nodes = nodes;
+			this.Nodes = nodes;
 		}
 		public ContactNodeToNode2D(IReadOnlyList<INode> nodes, double youngModulus, double penaltyFactorMultiplier,
 			IElementDofEnumerator dofEnumerator)
