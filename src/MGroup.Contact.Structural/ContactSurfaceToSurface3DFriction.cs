@@ -73,17 +73,17 @@ namespace MGroup.FEM.Structural.Line
 				};
 				this.IntegrationPointsSurfaceBaseVectors1 = new Dictionary<int, double[]>()
 				{
-					{ 1, new double[2] },
-					{ 2, new double[2] },
-					{ 3, new double[2] },
-					{ 4, new double[2] }
+					{ 1, new double[3] },
+					{ 2, new double[3] },
+					{ 3, new double[3] },
+					{ 4, new double[3] }
 				};
 				this.IntegrationPointsSurfaceBaseVectors2 = new Dictionary<int, double[]>()
 				{
-					{ 1, new double[2] },
-					{ 2, new double[2] },
-					{ 3, new double[2] },
-					{ 4, new double[2] }
+					{ 1, new double[3] },
+					{ 2, new double[3] },
+					{ 3, new double[3] },
+					{ 4, new double[3] }
 				};
 				PreviousConvergedSolutionNodalCoordinates = new double[3 * nodes.Count];
 				for (var i = 0; i < nodes.Count; i++)
@@ -138,17 +138,17 @@ namespace MGroup.FEM.Structural.Line
 				};
 				this.IntegrationPointsSurfaceBaseVectors1 = new Dictionary<int, double[]>()
 				{
-					{ 1, new double[2] },
-					{ 2, new double[2] },
-					{ 3, new double[2] },
-					{ 4, new double[2] }
+					{ 1, new double[3] },
+					{ 2, new double[3] },
+					{ 3, new double[3] },
+					{ 4, new double[3] }
 				};
 				this.IntegrationPointsSurfaceBaseVectors2 = new Dictionary<int, double[]>()
 				{
-					{ 1, new double[2] },
-					{ 2, new double[2] },
-					{ 3, new double[2] },
-					{ 4, new double[2] }
+					{ 1, new double[3] },
+					{ 2, new double[3] },
+					{ 3, new double[3] },
+					{ 4, new double[3] }
 				};
 				PreviousConvergedSolutionNodalCoordinates = new double[3 * nodes.Count];
 				for (var i = 0; i < nodes.Count; i++)
@@ -207,17 +207,17 @@ namespace MGroup.FEM.Structural.Line
 				};
 				this.IntegrationPointsSurfaceBaseVectors1 = new Dictionary<int, double[]>()
 				{
-					{ 1, new double[2] },
-					{ 2, new double[2] },
-					{ 3, new double[2] },
-					{ 4, new double[2] }
+					{ 1, new double[3] },
+					{ 2, new double[3] },
+					{ 3, new double[3] },
+					{ 4, new double[3] }
 				};
 				this.IntegrationPointsSurfaceBaseVectors2 = new Dictionary<int, double[]>()
 				{
-					{ 1, new double[2] },
-					{ 2, new double[2] },
-					{ 3, new double[2] },
-					{ 4, new double[2] }
+					{ 1, new double[3] },
+					{ 2, new double[3] },
+					{ 3, new double[3] },
+					{ 4, new double[3] }
 				};
 			}
 			else
@@ -249,27 +249,27 @@ namespace MGroup.FEM.Structural.Line
 				};
 				this.IntegrationPointsSurfaceBaseVectors1 = new Dictionary<int, double[]>()
 				{
-					{ 1, new double[2] },
-					{ 2, new double[2] },
-					{ 3, new double[2] },
-					{ 4, new double[2] },
-					{ 5, new double[2] },
-					{ 6, new double[2] },
-					{ 7, new double[2] },
-					{ 8, new double[2] },
-					{ 9, new double[2] }
+					{ 1, new double[3] },
+					{ 2, new double[3] },
+					{ 3, new double[3] },
+					{ 4, new double[3] },
+					{ 5, new double[3] },
+					{ 6, new double[3] },
+					{ 7, new double[3] },
+					{ 8, new double[3] },
+					{ 9, new double[3] }
 				};
 				this.IntegrationPointsSurfaceBaseVectors2 = new Dictionary<int, double[]>()
 				{
-					{ 1, new double[2] },
-					{ 2, new double[2] },
-					{ 3, new double[2] },
-					{ 4, new double[2] },
-					{ 5, new double[2] },
-					{ 6, new double[2] },
-					{ 7, new double[2] },
-					{ 8, new double[2] },
-					{ 9, new double[2] }
+					{ 1, new double[3] },
+					{ 2, new double[3] },
+					{ 3, new double[3] },
+					{ 4, new double[3] },
+					{ 5, new double[3] },
+					{ 6, new double[3] },
+					{ 7, new double[3] },
+					{ 8, new double[3] },
+					{ 9, new double[3] }
 				};
 			}
 			PreviousConvergedSolutionNodalCoordinates = new double[3 * nodes.Count];
@@ -328,17 +328,17 @@ namespace MGroup.FEM.Structural.Line
 				};
 				this.IntegrationPointsSurfaceBaseVectors1 = new Dictionary<int, double[]>()
 				{
-					{ 1, new double[2] },
-					{ 2, new double[2] },
-					{ 3, new double[2] },
-					{ 4, new double[2] }
+					{ 1, new double[3] },
+					{ 2, new double[3] },
+					{ 3, new double[3] },
+					{ 4, new double[3] }
 				};
 				this.IntegrationPointsSurfaceBaseVectors2 = new Dictionary<int, double[]>()
 				{
-					{ 1, new double[2] },
-					{ 2, new double[2] },
-					{ 3, new double[2] },
-					{ 4, new double[2] }
+					{ 1, new double[3] },
+					{ 2, new double[3] },
+					{ 3, new double[3] },
+					{ 4, new double[3] }
 				};
 			}
 			else
@@ -370,27 +370,27 @@ namespace MGroup.FEM.Structural.Line
 				};
 				this.IntegrationPointsSurfaceBaseVectors1 = new Dictionary<int, double[]>()
 				{
-					{ 1, new double[2] },
-					{ 2, new double[2] },
-					{ 3, new double[2] },
-					{ 4, new double[2] },
-					{ 5, new double[2] },
-					{ 6, new double[2] },
-					{ 7, new double[2] },
-					{ 8, new double[2] },
-					{ 9, new double[2] }
+					{ 1, new double[3] },
+					{ 2, new double[3] },
+					{ 3, new double[3] },
+					{ 4, new double[3] },
+					{ 5, new double[3] },
+					{ 6, new double[3] },
+					{ 7, new double[3] },
+					{ 8, new double[3] },
+					{ 9, new double[3] }
 				};
 				this.IntegrationPointsSurfaceBaseVectors2 = new Dictionary<int, double[]>()
 				{
-					{ 1, new double[2] },
-					{ 2, new double[2] },
-					{ 3, new double[2] },
-					{ 4, new double[2] },
-					{ 5, new double[2] },
-					{ 6, new double[2] },
-					{ 7, new double[2] },
-					{ 8, new double[2] },
-					{ 9, new double[2] }
+					{ 1, new double[3] },
+					{ 2, new double[3] },
+					{ 3, new double[3] },
+					{ 4, new double[3] },
+					{ 5, new double[3] },
+					{ 6, new double[3] },
+					{ 7, new double[3] },
+					{ 8, new double[3] },
+					{ 9, new double[3] }
 				};
 			}
 			PreviousConvergedSolutionNodalCoordinates = new double[3 * nodes.Count];
@@ -443,8 +443,8 @@ namespace MGroup.FEM.Structural.Line
 			{
 				integrationPointsStickingPoints.Add(i, new double[2]);
 				integrationPointsTangentialTractions.Add(i, new double[2]);
-				integrationPointsSurfaceBaseVectors1.Add(i, new double[2]);
-				integrationPointsSurfaceBaseVectors2.Add(i, new double[2]);
+				integrationPointsSurfaceBaseVectors1.Add(i, new double[3]);
+				integrationPointsSurfaceBaseVectors2.Add(i, new double[3]);
 			}
 			this.IntegrationPointsStickingPoints = integrationPointsStickingPoints;
 			this.IntegrationPointsTangentialTractions = integrationPointsTangentialTractions;
@@ -500,8 +500,8 @@ namespace MGroup.FEM.Structural.Line
 			{
 				integrationPointsStickingPoints.Add(i, new double[2]);
 				integrationPointsTangentialTractions.Add(i, new double[2]);
-				integrationPointsSurfaceBaseVectors1.Add(i, new double[2]);
-				integrationPointsSurfaceBaseVectors2.Add(i, new double[2]);
+				integrationPointsSurfaceBaseVectors1.Add(i, new double[3]);
+				integrationPointsSurfaceBaseVectors2.Add(i, new double[3]);
 			}
 			this.IntegrationPointsStickingPoints = integrationPointsStickingPoints;
 			this.IntegrationPointsTangentialTractions = integrationPointsTangentialTractions;
@@ -1507,8 +1507,10 @@ namespace MGroup.FEM.Structural.Line
 					var rM = MasterPrevSurfaceBaseVectors(da1Matrix, da2Matrix, x0);
 					IntegrationPointsSurfaceBaseVectors1[gPointId][0] = rM.Item1[0];
 					IntegrationPointsSurfaceBaseVectors1[gPointId][1] = rM.Item1[1];
+					IntegrationPointsSurfaceBaseVectors1[gPointId][2] = rM.Item1[2];
 					IntegrationPointsSurfaceBaseVectors2[gPointId][0] = rM.Item2[0];
 					IntegrationPointsSurfaceBaseVectors2[gPointId][1] = rM.Item2[1];
+					IntegrationPointsSurfaceBaseVectors2[gPointId][2] = rM.Item2[2];
 					gPointId += 1;
 				}
 			}
@@ -1526,9 +1528,7 @@ namespace MGroup.FEM.Structural.Line
 					var ihta1 = gPArray[i];
 					var ihta2 = gPArray[j];
 					var cPP = Project(0.0, 0.0, ihta1, ihta2);
-					IntegrationPointsStickingPoints[gPointId][0] = cPP[0];
-					IntegrationPointsStickingPoints[gPointId][1] = cPP[1];
-					if (Math.Abs(IntegrationPointsStickingPoints[gPointId][0]) <= 1.05 && Math.Abs(IntegrationPointsStickingPoints[gPointId][1]) <= 1.05)
+					if (Math.Abs(cPP[0]) <= 1.05 && Math.Abs(cPP[1]) <= 1.05)
 					{
 						var positionMatrices = CalculatePositionMatrix(IntegrationPointsStickingPoints[gPointId][0], IntegrationPointsStickingPoints[gPointId][1],
 							ihta1, ihta2);
@@ -1575,12 +1575,14 @@ namespace MGroup.FEM.Structural.Line
 							var rM1 = new double[]
 							{
 								IntegrationPointsSurfaceBaseVectors1[gPointId][0],
-								IntegrationPointsSurfaceBaseVectors1[gPointId][1]
+								IntegrationPointsSurfaceBaseVectors1[gPointId][1],
+								IntegrationPointsSurfaceBaseVectors1[gPointId][2],
 							};
 							var rM2 = new double[]
 							{
 								IntegrationPointsSurfaceBaseVectors2[gPointId][0],
-								IntegrationPointsSurfaceBaseVectors2[gPointId][1]
+								IntegrationPointsSurfaceBaseVectors2[gPointId][1],
+								IntegrationPointsSurfaceBaseVectors2[gPointId][2]
 							};
 							var mPrev = new double[,]
 							{
@@ -1616,21 +1618,29 @@ namespace MGroup.FEM.Structural.Line
 							{
 								IntegrationPointsTangentialTractions[gPointId][0] = trialTangentialTraction[0];
 								IntegrationPointsTangentialTractions[gPointId][1] = trialTangentialTraction[1];
+								IntegrationPointsStickingPoints[gPointId][0] = cPP[0];
+								IntegrationPointsStickingPoints[gPointId][1] = cPP[1];
 							}
 							else
 							{
 								IntegrationPointsTangentialTractions[gPointId][0] = (trialTangentialTraction[0] / tangentialTractionNorm) * SlidingCoefficient * PenaltyFactorNormal * Math.Abs(ksi3);
 								IntegrationPointsTangentialTractions[gPointId][1] = (trialTangentialTraction[1] / tangentialTractionNorm) * SlidingCoefficient * PenaltyFactorNormal * Math.Abs(ksi3);
+								IntegrationPointsStickingPoints[gPointId][0] = cPP[0];
+								IntegrationPointsStickingPoints[gPointId][1] = cPP[1];
 							};
 						}
 						else
 						{
 							IntegrationPointsTangentialTractions[gPointId] = new double[2];
+							IntegrationPointsStickingPoints[gPointId][0] = cPP[0];
+							IntegrationPointsStickingPoints[gPointId][1] = cPP[1];
 						}
 					}
 					else
 					{
 						IntegrationPointsTangentialTractions[gPointId] = new double[2];
+						IntegrationPointsStickingPoints[gPointId][0] = cPP[0];
+						IntegrationPointsStickingPoints[gPointId][1] = cPP[1];
 					}
 					gPointId += 1;
 				}
@@ -1671,8 +1681,10 @@ namespace MGroup.FEM.Structural.Line
 					var dRho2 = masterSurfaceCharacteristics.Item1.Item2;
 					IntegrationPointsSurfaceBaseVectors1[gPointId][0] = dRho1[0];
 					IntegrationPointsSurfaceBaseVectors1[gPointId][1] = dRho1[1];
+					IntegrationPointsSurfaceBaseVectors1[gPointId][2] = dRho1[2];
 					IntegrationPointsSurfaceBaseVectors2[gPointId][0] = dRho2[0];
 					IntegrationPointsSurfaceBaseVectors2[gPointId][1] = dRho2[1];
+					IntegrationPointsSurfaceBaseVectors2[gPointId][2] = dRho2[2];
 					gPointId += 1;
 				}
 			}
@@ -2305,7 +2317,7 @@ namespace MGroup.FEM.Structural.Line
 								(positionVector.Subtract(oldPositionVector)).DotProduct(dRho2) * mInv[1,1]
 							};
 							var rM1 = IntegrationPointsSurfaceBaseVectors1[gPointId];
-							var rM2 = IntegrationPointsSurfaceBaseVectors1[gPointId];
+							var rM2 = IntegrationPointsSurfaceBaseVectors2[gPointId];
 							var mPrev = new double[,]
 							{
 								{ rM1.DotProduct(rM1), rM1.DotProduct(rM2) },
@@ -2342,7 +2354,7 @@ namespace MGroup.FEM.Structural.Line
 								var StifnessMatrixTangentialPart = CalculateTangentialStiffnessPartForSticking(Matrix.CreateFromArray(aMatrix), Matrix.CreateFromArray(da1Matrix).Scale(-1d),
 									Matrix.CreateFromArray(da2Matrix).Scale(-1d),
 									mInv, hContravariantTensor, dRho1, dRho2, n, trialTangentialTraction);
-								var stickStifnessMatrix = StifnessMatrixTangentialPart.Scale(scalar);
+								var stickStifnessMatrix = StifnessMatrixTangentialPart.Scale(-scalar);
 								globalStifnessMatrix += stickStifnessMatrix;
 							}
 							else
@@ -2449,7 +2461,7 @@ namespace MGroup.FEM.Structural.Line
 								(positionVector.Subtract(oldPositionVector)).DotProduct(dRho2) * mInv[1,1]
 							};
 							var rM1 = IntegrationPointsSurfaceBaseVectors1[gPointId];
-							var rM2 = IntegrationPointsSurfaceBaseVectors1[gPointId];
+							var rM2 = IntegrationPointsSurfaceBaseVectors2[gPointId];
 							var mPrev = new double[,]
 							{
 								{ rM1.DotProduct(rM1), rM1.DotProduct(rM2) },
