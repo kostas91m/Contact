@@ -237,10 +237,12 @@ namespace MGroup.FEM.Structural.Line
 
 		public Tuple<double[], double[]> CalculateResponse(double[] local_Displacements)
 		{
-			// WARNING: 1) No strains are computed 2) localdDisplacements are not used.
-			double[] strains = null;
-			double[] forces = CreateInternalGlobalForcesVector();
-			double[] stresses = Array.ConvertAll(forces, x => x / ContactArea);
+			//WARNING: 1) No strains are computed 2) localdDisplacements are not used.
+			//double[] strains = null;
+			////double[] stresses = null;
+
+			//double[] forces = CalculateResponseIntegral(local_Displacements);
+			//double[] stresses = Array.ConvertAll(forces, x => x / ContactArea);
 			if (DisplacementVector == null || DisplacementVector.Length != local_Displacements.Length)
 			{
 				DisplacementVector = new double[local_Displacements.Length];
@@ -248,7 +250,8 @@ namespace MGroup.FEM.Structural.Line
 
 			Array.Copy(local_Displacements, DisplacementVector, local_Displacements.Length);
 
-			return new Tuple<double[], double[]>(strains, stresses);
+			//return new Tuple<double[], double[]>(strains, stresses);
+			return new Tuple<double[], double[]>(null, null);
 		}
 
 		public double[] CalculateResponseIntegralForLogging(double[] localDisplacements) => CalculateResponseIntegral();
