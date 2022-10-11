@@ -64,6 +64,7 @@ namespace MGroup.FEM.Structural.Line
 				this.PreviousConvergedSolutionNodalCoordinates[3 * i + 1] = nodes[i].Y;
 				this.PreviousConvergedSolutionNodalCoordinates[3 * i + 2] = nodes[i].Z;
 			}
+			InitializeTangentialProperties();
 		}
 		public ContactNodeToSurface3DFriction(IReadOnlyList<INode> nodes, double penaltyFactorNormal,
 			double penaltyFactorTangential, double stickingCoefficient, double slidingCoefficient,
@@ -103,6 +104,7 @@ namespace MGroup.FEM.Structural.Line
 				this.PreviousConvergedSolutionNodalCoordinates[3 * i + 1] = nodes[i].Y;
 				this.PreviousConvergedSolutionNodalCoordinates[3 * i + 2] = nodes[i].Z;
 			}
+			InitializeTangentialProperties();
 		}
 		public ContactNodeToSurface3DFriction(IReadOnlyList<INode> nodes, double youngModulus, double penaltyFactorMultiplierNormal,
 			double penaltyFactorMultiplierTangential, double stickingCoefficient, double slidingCoefficient,
@@ -1016,7 +1018,7 @@ namespace MGroup.FEM.Structural.Line
 
 		public double[] CalculateResponseIntegral() => CreateInternalGlobalForcesVector();
 
-		public void SaveConstitutiveLawState() { }
+		public void SaveConstitutiveLawState() => UpdateTangentialProperties();
 
 		#endregion
 

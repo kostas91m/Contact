@@ -500,77 +500,103 @@ namespace MGroup.FEM.Structural.Line
 
 		private double Project(double ksi1Initial, double ksi2)
 		{
-			if (MasterSegmentOrder == 1)
+			//if (MasterSegmentOrder == 1)
+			//{
+			//	var aMatrix = CalculatePositionMatrix(ksi1Initial, ksi2).Item1;
+			//	var m = SlaveSegmentOrder + 1;
+			//	var slaveNMatrix = new double[2, 2 * m];
+			//	var xUpdated = NodalXUpdated();
+			//	var list = new List<double>();
+			//	for (var i = 4; i < list.Count; i++)
+			//	{
+			//		list.Add(xUpdated[i]);
+			//	}
+			//	var x = list.ToArray();
+			//	for (var i = 0; i <= 1; i++)
+			//	{
+			//		if (i == 0)
+			//		{
+			//			var countCols = 0;
+			//			for (var j = 4; j < aMatrix.GetLength(1) - 1; j += 2)
+			//			{
+			//				slaveNMatrix[i, countCols] = aMatrix[i, j];
+			//				countCols += 2;
+			//			}
+			//		}
+			//		else
+			//		{
+			//			var countCols = 1;
+			//			for (var j = 5; j < aMatrix.GetLength(1); j += 2)
+			//			{
+			//				slaveNMatrix[i, countCols] = aMatrix[i, j];
+			//				countCols += 2;
+			//			}
+			//		}
+			//	}
+			//	var slavePositionVector = Matrix.CreateFromArray(slaveNMatrix).Multiply(x);
+			//	var xM1 = xUpdated[0];
+			//	var yM1 = xUpdated[1];
+			//	var xM2 = xUpdated[2];
+			//	var yM2 = xUpdated[3];
+			//	var xS = slavePositionVector[0];
+			//	var yS = slavePositionVector[1];
+			//	var ksi = (2 * (xS * (xM2 - xM1) + yS * (yM2 - yM1)) - Math.Pow(xM2, 2) - Math.Pow(yM2, 2) + Math.Pow(xM1, 2) + Math.Pow(yM1, 2)) / (Math.Pow(xM2 - xM1, 2) + Math.Pow(yM2 - yM1, 2));
+			//	return ksi;
+			//}
+			//else
+			//{
+			//	var maxIterations = 1000;
+			//	var tol = Math.Pow(10.0, -6.0);
+			//	var deltaKsi = 0.0;
+			//	var ksi = ksi1Initial;
+			//	var xUpdated = NodalXUpdated();
+			//	for (var i = 1; i <= maxIterations; i++)
+			//	{
+			//		var aMatrices = CalculatePositionMatrix(ksi, ksi2);
+			//		var masterSlaveRelativeVector = Matrix.CreateFromArray(aMatrices.Item1).Multiply(xUpdated);
+			//		var surfaceVector = Matrix.CreateFromArray(aMatrices.Item2).Multiply(xUpdated).Scale(-1.0);
+			//		var surfaceVectorDerivative = Matrix.CreateFromArray(aMatrices.Item3).Multiply(xUpdated).Scale(-1.0);
+			//		deltaKsi = CalculateDeltaKsi(masterSlaveRelativeVector, surfaceVector, surfaceVectorDerivative);
+			//		ksi += deltaKsi;
+			//		if (Math.Abs(deltaKsi) <= tol)
+			//		{
+			//			break;
+			//		}
+			//	}
+			//	if (Math.Abs(deltaKsi) > tol)
+			//	{
+			//		throw new Exception("CPP not found in current iterations");
+			//	}
+			//	else
+			//	{
+			//		return ksi;
+			//	}
+			//}
+			var maxIterations = 1000;
+			var tol = Math.Pow(10.0, -6.0);
+			var deltaKsi = 0.0;
+			var ksi = ksi1Initial;
+			var xUpdated = NodalXUpdated();
+			for (var i = 1; i <= maxIterations; i++)
 			{
-				var aMatrix = CalculatePositionMatrix(ksi1Initial, ksi2).Item1;
-				var m = SlaveSegmentOrder + 1;
-				var slaveNMatrix = new double[2, 2 * m];
-				var xUpdated = NodalXUpdated();
-				var list = new List<double>();
-				for (var i = 4; i < list.Count; i++)
+				var aMatrices = CalculatePositionMatrix(ksi, ksi2);
+				var masterSlaveRelativeVector = Matrix.CreateFromArray(aMatrices.Item1).Multiply(xUpdated);
+				var surfaceVector = Matrix.CreateFromArray(aMatrices.Item2).Multiply(xUpdated).Scale(-1.0);
+				var surfaceVectorDerivative = Matrix.CreateFromArray(aMatrices.Item3).Multiply(xUpdated).Scale(-1.0);
+				deltaKsi = CalculateDeltaKsi(masterSlaveRelativeVector, surfaceVector, surfaceVectorDerivative);
+				ksi += deltaKsi;
+				if (Math.Abs(deltaKsi) <= tol)
 				{
-					list.Add(xUpdated[i]);
+					break;
 				}
-				var x = list.ToArray();
-				for (var i = 0; i <= 1; i++)
-				{
-					if (i == 0)
-					{
-						var countCols = 0;
-						for (var j = 4; j < aMatrix.GetLength(1) - 1; j += 2)
-						{
-							slaveNMatrix[i, countCols] = aMatrix[i, j];
-							countCols += 2;
-						}
-					}
-					else
-					{
-						var countCols = 1;
-						for (var j = 5; j < aMatrix.GetLength(1); j += 2)
-						{
-							slaveNMatrix[i, countCols] = aMatrix[i, j];
-							countCols += 2;
-						}
-					}
-				}
-				var slavePositionVector = Matrix.CreateFromArray(slaveNMatrix).Multiply(x);
-				var xM1 = xUpdated[0];
-				var yM1 = xUpdated[1];
-				var xM2 = xUpdated[2];
-				var yM2 = xUpdated[3];
-				var xS = slavePositionVector[0];
-				var yS = slavePositionVector[1];
-				var ksi = (2 * (xS * (xM2 - xM1) + yS * (yM2 - yM1)) - Math.Pow(xM2, 2) - Math.Pow(yM2, 2) + Math.Pow(xM1, 2) + Math.Pow(yM1, 2)) / (Math.Pow(xM2 - xM1, 2) + Math.Pow(yM2 - yM1, 2));
-				return ksi;
+			}
+			if (Math.Abs(deltaKsi) > tol)
+			{
+				throw new Exception("CPP not found in current iterations");
 			}
 			else
 			{
-				var maxIterations = 1000;
-				var tol = Math.Pow(10.0, -6.0);
-				var deltaKsi = 0.0;
-				var ksi = ksi1Initial;
-				var xUpdated = NodalXUpdated();
-				for (var i = 1; i <= maxIterations; i++)
-				{
-					var aMatrices = CalculatePositionMatrix(ksi, ksi2);
-					var masterSlaveRelativeVector = Matrix.CreateFromArray(aMatrices.Item1).Multiply(xUpdated);
-					var surfaceVector = Matrix.CreateFromArray(aMatrices.Item2).Multiply(xUpdated).Scale(-1.0);
-					var surfaceVectorDerivative = Matrix.CreateFromArray(aMatrices.Item3).Multiply(xUpdated).Scale(-1.0);
-					deltaKsi = CalculateDeltaKsi(masterSlaveRelativeVector, surfaceVector, surfaceVectorDerivative);
-					ksi += deltaKsi;
-					if (Math.Abs(deltaKsi) <= tol)
-					{
-						break;
-					}
-				}
-				if (Math.Abs(deltaKsi) > tol)
-				{
-					throw new Exception("CPP not found in current iterations");
-				}
-				else
-				{
-					return ksi;
-				}
+				return ksi;
 			}
 		}
 		private Tuple<double[], double[]> GaussPoints()

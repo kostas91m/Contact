@@ -59,7 +59,7 @@ namespace MGroup.FEM.Structural.Line
 		{
 			this.dofEnumerator = dofEnumerator;
 		}
-		public CellType CellType { get; } = CellType.Unknown;// I guess?
+		public CellType CellType { get; } = CellType.Unknown;
 
 		public IElementDofEnumerator DofEnumerator
 		{

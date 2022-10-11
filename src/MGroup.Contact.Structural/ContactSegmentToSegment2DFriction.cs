@@ -61,6 +61,7 @@ namespace MGroup.FEM.Structural.Line
 				{ 1, 0.0 },
 				{ 2, 0.0 }
 			};
+			InitializeTangentialProperties();
 		}
 		public ContactSegmentToSegment2DFriction(IReadOnlyList<INode> nodes, double penaltyFactorNormal, double penaltyFactorTangential,
 			double stickingCoefficient, double slidingCoefficient, double contactArea)
@@ -97,6 +98,7 @@ namespace MGroup.FEM.Structural.Line
 				{ 1, 0.0 },
 				{ 2, 0.0 }
 			};
+			InitializeTangentialProperties();
 		}
 		public ContactSegmentToSegment2DFriction(IReadOnlyList<INode> nodes, double youngModulus, double penaltyFactorMultiplierNormal,
 			double penaltyFactorMultiplierTangential, double stickingCoefficient, double slidingCoefficient, double contactArea,
@@ -145,6 +147,7 @@ namespace MGroup.FEM.Structural.Line
 			}
 			this.IntegrationPointsStickingPoints = integrationPointsStickingPoints;
 			this.IntegrationPointsTangentialTractions = integrationPointsTangentialTractions;
+			InitializeTangentialProperties();
 		}
 		public ContactSegmentToSegment2DFriction(IReadOnlyList<INode> nodes, double penaltyFactorNormal, double penaltyFactorTangential,
 			double stickingCoefficient, double slidingCoefficient, double contactArea,
@@ -193,6 +196,7 @@ namespace MGroup.FEM.Structural.Line
 			}
 			this.IntegrationPointsStickingPoints = integrationPointsStickingPoints;
 			this.IntegrationPointsTangentialTractions = integrationPointsTangentialTractions;
+			InitializeTangentialProperties();
 		}
 		public ContactSegmentToSegment2DFriction(IReadOnlyList<INode> nodes, double youngModulus, double penaltyFactorMultiplierNormal,
 			double penaltyFactorMultiplierTangential, double stickingCoefficient, double slidingCoefficient, double contactArea,
@@ -242,6 +246,7 @@ namespace MGroup.FEM.Structural.Line
 			}
 			this.IntegrationPointsStickingPoints = integrationPointsStickingPoints;
 			this.IntegrationPointsTangentialTractions = integrationPointsTangentialTractions;
+			InitializeTangentialProperties();
 		}
 		public ContactSegmentToSegment2DFriction(IReadOnlyList<INode> nodes, double penaltyFactorNormal, double penaltyFactorTangential,
 			double stickingCoefficient, double slidingCoefficient, double contactArea,
@@ -291,6 +296,7 @@ namespace MGroup.FEM.Structural.Line
 			}
 			this.IntegrationPointsStickingPoints = integrationPointsStickingPoints;
 			this.IntegrationPointsTangentialTractions = integrationPointsTangentialTractions;
+			InitializeTangentialProperties();
 		}
 		ContactSegmentToSegment2DFriction(IReadOnlyList<INode> nodes, double youngModulus, double penaltyFactorMultiplierNormal,
 			double penaltyFactorMultiplierTangential, double stickingCoefficient, double slidingCoefficient, double contactArea,
@@ -715,7 +721,7 @@ namespace MGroup.FEM.Structural.Line
 				return ksi;
 			}
 		}
-		public void InitializeTangentialProperties()
+		private void InitializeTangentialProperties()
 		{
 			var gPointsArray = GaussPoints().Item1;
 			for (var i = 0; i < IntegrationPoints; i++)
@@ -725,7 +731,7 @@ namespace MGroup.FEM.Structural.Line
 				IntegrationPointsStickingPoints[i + 1] = ksi11;
 			}
 		}
-		public void UpdateTangentialProperties()
+		private void UpdateTangentialProperties()
 		{
 			var gPointsArray = GaussPoints().Item1;
 			for (var i = 0; i < IntegrationPoints; i++)
@@ -1102,7 +1108,7 @@ namespace MGroup.FEM.Structural.Line
 
 		public double[] CalculateResponseIntegral() => CreateInternalGlobalForcesVector();
 
-		public void SaveConstitutiveLawState() { }
+		public void SaveConstitutiveLawState() => UpdateTangentialProperties();
 
 		#endregion
 

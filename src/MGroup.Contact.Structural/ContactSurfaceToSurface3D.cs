@@ -1004,6 +1004,7 @@ namespace MGroup.FEM.Structural.Line
 				return ksi;
 			}
 		}
+
 		private Tuple<double[], double[]> GaussPoints()
 		{
 			var iP = IntegrationPointsPerNaturalAxis;
@@ -1219,7 +1220,7 @@ namespace MGroup.FEM.Structural.Line
 			for (var i = 0; i < IntegrationPointsPerNaturalAxis; i++)
 			{
 				var ihta1 = gPArray[i];
-				var gW1 = gPArray[i];
+				var gW1 = gWArray[i];
 				for (var j = 0; j < IntegrationPointsPerNaturalAxis; j++)
 				{
 					var ihta2 = gPArray[j];
@@ -1240,6 +1241,7 @@ namespace MGroup.FEM.Structural.Line
 						var dRho1 = masterSurfaceCharacteristics.Item1.Item1;
 						var dRho2 = masterSurfaceCharacteristics.Item1.Item2;
 						var n = masterSurfaceCharacteristics.Item5;
+						//n = NormalVectorChecked(n);
 						var h = masterSurfaceCharacteristics.Item7;
 						var ksi3 = CalculatePenetration(aMatrix, n);
 						if (ksi3 <= 0)
