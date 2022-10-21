@@ -7,6 +7,7 @@ using MGroup.MSolve.Discretization.Dofs;
 using MGroup.MSolve.Discretization.Entities;
 using MGroup.MSolve.Discretization.BoundaryConditions;
 using MGroup.LinearAlgebra.Vectors;
+using MGroup.MSolve.DataStructures;
 
 namespace MGroup.FEM.Structural.Line
 {
@@ -1018,7 +1019,7 @@ namespace MGroup.FEM.Structural.Line
 
 		public double[] CalculateResponseIntegral() => CreateInternalGlobalForcesVector();
 
-		public void SaveConstitutiveLawState() => UpdateTangentialProperties();
+		public void SaveConstitutiveLawState(IHaveState externalState) => UpdateTangentialProperties();
 
 		#endregion
 
