@@ -7,6 +7,7 @@ using MGroup.MSolve.Discretization.Dofs;
 using MGroup.MSolve.Discretization.Entities;
 using MGroup.MSolve.Discretization.BoundaryConditions;
 using MGroup.LinearAlgebra.Vectors;
+using MGroup.MSolve.DataStructures;
 
 namespace MGroup.FEM.Structural.Line
 {
@@ -45,7 +46,7 @@ namespace MGroup.FEM.Structural.Line
 		{
 			this.dofEnumerator = dofEnumerator;
 		}
-		public CellType CellType { get; } = CellType.Line2;
+		public CellType CellType { get; } = CellType.Unknown;
 
 		public IElementDofEnumerator DofEnumerator
 		{
@@ -319,10 +320,12 @@ namespace MGroup.FEM.Structural.Line
 
 		public Tuple<double[], double[]> CalculateResponse(double[] local_Displacements)
 		{
-			// WARNING: 1) No strains are computed 2) localdDisplacements are not used.
-			double[] strains = null;
-			double[] forces = CreateInternalGlobalForcesVector();
-			double[] stresses = Array.ConvertAll(forces, x => x / ContactArea);
+			//WARNING: 1) No strains are computed 2) localdDisplacements are not used.
+			//double[] strains = null;
+			////double[] stresses = null;
+
+			//double[] forces = CalculateResponseIntegral(local_Displacements);
+			//double[] stresses = Array.ConvertAll(forces, x => x / ContactArea);
 			if (DisplacementVector == null || DisplacementVector.Length != local_Displacements.Length)
 			{
 				DisplacementVector = new double[local_Displacements.Length];
@@ -330,7 +333,8 @@ namespace MGroup.FEM.Structural.Line
 
 			Array.Copy(local_Displacements, DisplacementVector, local_Displacements.Length);
 
-			return new Tuple<double[], double[]>(strains, stresses);
+			//return new Tuple<double[], double[]>(strains, stresses);
+			return new Tuple<double[], double[]>(null, null);
 		}
 
 		public double[] CalculateResponseIntegralForLogging(double[] localDisplacements)
@@ -340,7 +344,7 @@ namespace MGroup.FEM.Structural.Line
 
 		public double[] CalculateResponseIntegral() => CreateInternalGlobalForcesVector();
 
-		public void SaveConstitutiveLawState() { }
+		public void SaveConstitutiveLawState(IHaveState externalState) { }
 
 		#endregion
 

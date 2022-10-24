@@ -7,6 +7,7 @@ using MGroup.MSolve.Discretization.Dofs;
 using MGroup.MSolve.Discretization.Entities;
 using MGroup.MSolve.Discretization.BoundaryConditions;
 using MGroup.LinearAlgebra.Vectors;
+using MGroup.MSolve.DataStructures;
 
 namespace MGroup.FEM.Structural.Line
 {
@@ -45,7 +46,7 @@ namespace MGroup.FEM.Structural.Line
 		{
 			this.dofEnumerator = dofEnumerator;
 		}
-		public CellType CellType { get; } = CellType.Line2;
+		public CellType CellType { get; } = CellType.Unknown;
 
 		public IElementDofEnumerator DofEnumerator
 		{
@@ -124,6 +125,24 @@ namespace MGroup.FEM.Structural.Line
 				return dofEnumerator.GetTransformedMatrix(SymmetricMatrix.CreateFromArray(globalStifnessMatrix));
 			}
 		}
+		private Vector CreateInternalGlobalForcesVector()
+		{
+			var penetration = CalculateNormalGap();
+			if (penetration <= 0)
+			{
+				var n = Vector.CreateFromArray(CalculateNormalUnitVector());
+				var A = Matrix.CreateFromArray(CalculatePositionMatrix());
+				var AT = A.Transpose();
+				var AT_n = AT.Multiply(n);
+				var internalGlobalForcesVector = AT_n.Scale(penaltyFactor * penetration);
+				return internalGlobalForcesVector;
+			}
+			else
+			{
+				var internalGlobalForcesVector = new double[4];
+				return Vector.CreateFromArray(internalGlobalForcesVector);
+			}
+		}
 		public IMatrix PhysicsMatrix()
 		{
 			return StiffnessMatrix();
@@ -134,7 +153,7 @@ namespace MGroup.FEM.Structural.Line
 			return dofEnumerator.GetTransformedMatrix(SymmetricMatrix.CreateFromArray(massMatrix));
 		}
 
-		public IMatrix DampingMatrix() 
+		public IMatrix DampingMatrix()
 		{
 			double[,] dampingMatrix = new double[4, 4];
 			return dofEnumerator.GetTransformedMatrix(SymmetricMatrix.CreateFromArray(dampingMatrix));
@@ -144,8 +163,13 @@ namespace MGroup.FEM.Structural.Line
 		{
 			if (localdDisplacements != null)
 			{
-				IMatrix stiffness = StiffnessMatrix();
-				return stiffness.Multiply(localdDisplacements);
+				//IMatrix stiffness = StiffnessMatrix();
+				//return stiffness.Multiply(localdDisplacements);
+				for (var i = 0; i < DisplacementVector.Length; i++)
+				{
+					DisplacementVector[i] = localdDisplacements[i];
+				}
+				return CreateInternalGlobalForcesVector().CopyToArray();
 			}
 			else
 			{
@@ -155,10 +179,12 @@ namespace MGroup.FEM.Structural.Line
 
 		public Tuple<double[], double[]> CalculateResponse(double[] local_Displacements)
 		{
-			// WARNING: 1) No strains are computed 2) localdDisplacements are not used.
-			double[] strains = null;
-			double[] forces = CalculateResponseIntegral(local_Displacements);
-			double[] stresses = Array.ConvertAll(forces, x => x / ContactArea);
+			//WARNING: 1) No strains are computed 2) localdDisplacements are not used.
+			//double[] strains = null;
+			////double[] stresses = null;
+
+			//double[] forces = CalculateResponseIntegral(local_Displacements);
+			//double[] stresses = Array.ConvertAll(forces, x => x / ContactArea);
 			if (DisplacementVector == null || DisplacementVector.Length != local_Displacements.Length)
 			{
 				DisplacementVector = new double[local_Displacements.Length];
@@ -166,8 +192,12 @@ namespace MGroup.FEM.Structural.Line
 
 			Array.Copy(local_Displacements, DisplacementVector, local_Displacements.Length);
 
-			return new Tuple<double[], double[]>(strains, stresses);
+			//return new Tuple<double[], double[]>(strains, stresses);
+			return new Tuple<double[], double[]>(null, null);
+
 		}
+		//public Tuple<double[], double[]> CalculateResponse(double[] local_Displacements) => throw new NotImplementedException();
+
 
 		public double[] CalculateResponseIntegralForLogging(double[] localDisplacements)
 		{
@@ -193,7 +223,7 @@ namespace MGroup.FEM.Structural.Line
 		//	return massMatrix.Multiply(accelerations);
 		//}
 
-		public void SaveConstitutiveLawState() { }
+		public void SaveConstitutiveLawState(IHaveState externalState) { }
 
 		#endregion
 
