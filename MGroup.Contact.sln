@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B0C87C19-1B55-4255-ADC8-97FC240EB363}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MGroup.Contact.Structural", "src\MGroup.Contact.Structural\MGroup.Contact.Structural.csproj", "{D6C4973E-5D46-4D4A-8FE5-CCABC2380A89}"
 EndProject
 Global
@@ -18,6 +20,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D6C4973E-5D46-4D4A-8FE5-CCABC2380A89} = {B0C87C19-1B55-4255-ADC8-97FC240EB363}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {08BFC0B1-B08A-4BF3-AB85-98DAD4E8B277}

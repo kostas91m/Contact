@@ -12,7 +12,7 @@ using MGroup.LinearAlgebra;
 
 namespace MGroup.FEM.Structural.Line
 {
-	public class ContactSurfaceToSurface3D : IStructuralElementType
+	public class ContactSurfaceToSurface3DSerendipitySecondOrder : IStructuralElementType
 	{
 		private readonly IDofType[][] dofs;
 		private readonly double penaltyFactor;
@@ -24,7 +24,7 @@ namespace MGroup.FEM.Structural.Line
 		private double[] DisplacementVector { get; set; }
 		private double ContactArea { get; }
 		//private List<int> activeElements = new List<int>();
-		public ContactSurfaceToSurface3D(IReadOnlyList<INode> nodes, double youngModulus, double penaltyFactorMultiplier, double contactArea)
+		public ContactSurfaceToSurface3DSerendipitySecondOrder(IReadOnlyList<INode> nodes, double youngModulus, double penaltyFactorMultiplier, double contactArea)
 		{
 			if (nodes.Count != 8)
 			{
@@ -49,7 +49,7 @@ namespace MGroup.FEM.Structural.Line
 				this.IntegrationPointsPerNaturalAxis = 2;
 			}
 		}
-		public ContactSurfaceToSurface3D(IReadOnlyList<INode> nodes, double penaltyFactor, double contactArea)
+		public ContactSurfaceToSurface3DSerendipitySecondOrder(IReadOnlyList<INode> nodes, double penaltyFactor, double contactArea)
 		{
 			if (nodes.Count != 8)
 			{
@@ -71,14 +71,17 @@ namespace MGroup.FEM.Structural.Line
 			this.SlaveSurfaceOrder = 1;
 			this.IntegrationPointsPerNaturalAxis = 2;
 		}
-		public ContactSurfaceToSurface3D(IReadOnlyList<INode> nodes, double youngModulus, double penaltyFactorMultiplier, double contactArea,
+		public ContactSurfaceToSurface3DSerendipitySecondOrder(IReadOnlyList<INode> nodes, double youngModulus, double penaltyFactorMultiplier, double contactArea,
 			int masterSurfaceOrder, int slaveSurfaceOrder)
 		{
 			if ((masterSurfaceOrder != 1 && masterSurfaceOrder != 2) || (slaveSurfaceOrder != 1 && slaveSurfaceOrder != 2))
 			{
 				throw new ArgumentException("Only linear & quadratic Surfaces can be defined");
 			}
-			if (nodes.Count != (slaveSurfaceOrder + 1.0) * (slaveSurfaceOrder + 1.0) + (masterSurfaceOrder + 1.0) * (masterSurfaceOrder + 1.0))
+			if (((masterSurfaceOrder == 1 && slaveSurfaceOrder == 1) && nodes.Count != 8) ||
+				((masterSurfaceOrder == 1 && slaveSurfaceOrder == 2) && nodes.Count != 12) ||
+				((masterSurfaceOrder == 2 && slaveSurfaceOrder == 1) && nodes.Count != 12) ||
+				((masterSurfaceOrder == 2 && slaveSurfaceOrder == 2) && nodes.Count != 16))
 			{
 				throw new ArgumentException("Inconsistent input regarding the nodes & the order of the Surfaces");
 			}
@@ -105,13 +108,16 @@ namespace MGroup.FEM.Structural.Line
 				this.IntegrationPointsPerNaturalAxis = 3;
 			}
 		}
-		public ContactSurfaceToSurface3D(IReadOnlyList<INode> nodes, double penaltyFactor, double contactArea, int masterSurfaceOrder, int slaveSurfaceOrder)
+		public ContactSurfaceToSurface3DSerendipitySecondOrder(IReadOnlyList<INode> nodes, double penaltyFactor, double contactArea, int masterSurfaceOrder, int slaveSurfaceOrder)
 		{
 			if ((masterSurfaceOrder != 1 && masterSurfaceOrder != 2) || (slaveSurfaceOrder != 1 && slaveSurfaceOrder != 2))
 			{
 				throw new ArgumentException("Only linear & quadratic Surfaces can be defined");
 			}
-			if (nodes.Count != (slaveSurfaceOrder + 1.0) * (slaveSurfaceOrder + 1.0) + (masterSurfaceOrder + 1.0) * (masterSurfaceOrder + 1.0))
+			if (((masterSurfaceOrder == 1 && slaveSurfaceOrder == 1) && nodes.Count != 8) ||
+				((masterSurfaceOrder == 1 && slaveSurfaceOrder == 2) && nodes.Count != 12) ||
+				((masterSurfaceOrder == 2 && slaveSurfaceOrder == 1) && nodes.Count != 12) ||
+				((masterSurfaceOrder == 2 && slaveSurfaceOrder == 2) && nodes.Count != 16))
 			{
 				throw new ArgumentException("Inconsistent input regarding the nodes & the order of the Surfaces");
 			}
@@ -138,14 +144,17 @@ namespace MGroup.FEM.Structural.Line
 				this.IntegrationPointsPerNaturalAxis = 3;
 			}
 		}
-		public ContactSurfaceToSurface3D(IReadOnlyList<INode> nodes, double youngModulus, double penaltyFactorMultiplier, double contactArea,
+		public ContactSurfaceToSurface3DSerendipitySecondOrder(IReadOnlyList<INode> nodes, double youngModulus, double penaltyFactorMultiplier, double contactArea,
 			int masterSurfaceOrder, int slaveSurfaceOrder, int integrationPointsPerNaturalAxis)
 		{
 			if ((masterSurfaceOrder != 1 && masterSurfaceOrder != 2) || (slaveSurfaceOrder != 1 && slaveSurfaceOrder != 2))
 			{
 				throw new ArgumentException("Only linear & quadratic Surfaces can be defined");
 			}
-			if (nodes.Count != (slaveSurfaceOrder + 1.0) * (slaveSurfaceOrder + 1.0) + (masterSurfaceOrder + 1.0) * (masterSurfaceOrder + 1.0))
+			if (((masterSurfaceOrder == 1 && slaveSurfaceOrder == 1) && nodes.Count != 8) ||
+				((masterSurfaceOrder == 1 && slaveSurfaceOrder == 2) && nodes.Count != 12) ||
+				((masterSurfaceOrder == 2 && slaveSurfaceOrder == 1) && nodes.Count != 12) ||
+				((masterSurfaceOrder == 2 && slaveSurfaceOrder == 2) && nodes.Count != 16))
 			{
 				throw new ArgumentException("Inconsistent input regarding the nodes & the order of the Surfaces");
 			}
@@ -168,52 +177,17 @@ namespace MGroup.FEM.Structural.Line
 			this.MasterSurfaceOrder = masterSurfaceOrder;
 			this.SlaveSurfaceOrder = slaveSurfaceOrder;
 			this.IntegrationPointsPerNaturalAxis = integrationPointsPerNaturalAxis;
-
-			//var myList = new List<int>();
-			//myList.Add(2853);
-			//myList.Add(2854);
-			//myList.Add(2861);
-			//myList.Add(2869);
-			//myList.Add(2875);
-
-			//myList.Add(2877);
-			//myList.Add(2883);
-			//myList.Add(2888);
-			//myList.Add(2892);
-			//myList.Add(2896);
-
-			//myList.Add(2900);
-			//myList.Add(2903);
-			//myList.Add(2904);
-			//myList.Add(2912);
-			//myList.Add(2983);
-
-			//myList.Add(3007);
-			//myList.Add(3008);
-			//myList.Add(3032);
-			//myList.Add(3036);
-			//myList.Add(3053);
-
-			//myList.Add(3059);
-			//myList.Add(3077);
-			//myList.Add(3078);
-			//myList.Add(3102);
-			//myList.Add(3175);
-
-			//myList.Add(3199);
-			//myList.Add(3200);
-			//myList.Add(3224);
-			//myList.Add(3228);
-			//myList.Add(3245);
-			//activeElements = myList;
 		}
-		public ContactSurfaceToSurface3D(IReadOnlyList<INode> nodes, double penaltyFactor, double contactArea, int masterSurfaceOrder, int slaveSurfaceOrder, int integrationPointsPerNaturalAxis)
+		public ContactSurfaceToSurface3DSerendipitySecondOrder(IReadOnlyList<INode> nodes, double penaltyFactor, double contactArea, int masterSurfaceOrder, int slaveSurfaceOrder, int integrationPointsPerNaturalAxis)
 		{
 			if ((masterSurfaceOrder != 1 && masterSurfaceOrder != 2) || (slaveSurfaceOrder != 1 && slaveSurfaceOrder != 2))
 			{
 				throw new ArgumentException("Only linear & quadratic Surfaces can be defined");
 			}
-			if (nodes.Count != (slaveSurfaceOrder + 1.0) * (slaveSurfaceOrder + 1.0) + (masterSurfaceOrder + 1.0) * (masterSurfaceOrder + 1.0))
+			if (((masterSurfaceOrder == 1 && slaveSurfaceOrder == 1) && nodes.Count != 8) ||
+				((masterSurfaceOrder == 1 && slaveSurfaceOrder == 2) && nodes.Count != 12) ||
+				((masterSurfaceOrder == 2 && slaveSurfaceOrder == 1) && nodes.Count != 12) ||
+				((masterSurfaceOrder == 2 && slaveSurfaceOrder == 2) && nodes.Count != 16))
 			{
 				throw new ArgumentException("Inconsistent input regarding the nodes & the order of the Surfaces");
 			}
@@ -237,36 +211,36 @@ namespace MGroup.FEM.Structural.Line
 			this.SlaveSurfaceOrder = slaveSurfaceOrder;
 			this.IntegrationPointsPerNaturalAxis = integrationPointsPerNaturalAxis;
 		}
-		public ContactSurfaceToSurface3D(IReadOnlyList<INode> nodes, double youngModulus, double penaltyFactorMultiplier,
+		public ContactSurfaceToSurface3DSerendipitySecondOrder(IReadOnlyList<INode> nodes, double youngModulus, double penaltyFactorMultiplier,
 			IElementDofEnumerator dofEnumerator)
 			: this(nodes, youngModulus, penaltyFactorMultiplier, 1d)
 		{
 			this.dofEnumerator = dofEnumerator;
 		}
-		public ContactSurfaceToSurface3D(IReadOnlyList<INode> nodes, double penaltyFactor, IElementDofEnumerator dofEnumerator)
+		public ContactSurfaceToSurface3DSerendipitySecondOrder(IReadOnlyList<INode> nodes, double penaltyFactor, IElementDofEnumerator dofEnumerator)
 			: this(nodes, penaltyFactor, 1.0)
 		{
 			this.dofEnumerator = dofEnumerator;
 		}
-		public ContactSurfaceToSurface3D(IReadOnlyList<INode> nodes, double youngModulus, double penaltyFactorMultiplier, int masterSurfaceOrder, int slaveSurfaceOrder,
+		public ContactSurfaceToSurface3DSerendipitySecondOrder(IReadOnlyList<INode> nodes, double youngModulus, double penaltyFactorMultiplier, int masterSurfaceOrder, int slaveSurfaceOrder,
 			IElementDofEnumerator dofEnumerator)
 			: this(nodes, youngModulus, penaltyFactorMultiplier, 1d, masterSurfaceOrder, slaveSurfaceOrder)
 		{
 			this.dofEnumerator = dofEnumerator;
 		}
-		public ContactSurfaceToSurface3D(IReadOnlyList<INode> nodes, double penaltyFactor, int masterSurfaceOrder, int slaveSurfaceOrder,
+		public ContactSurfaceToSurface3DSerendipitySecondOrder(IReadOnlyList<INode> nodes, double penaltyFactor, int masterSurfaceOrder, int slaveSurfaceOrder,
 			IElementDofEnumerator dofEnumerator)
 			: this(nodes, penaltyFactor, 1.0, masterSurfaceOrder, slaveSurfaceOrder)
 		{
 			this.dofEnumerator = dofEnumerator;
 		}
-		public ContactSurfaceToSurface3D(IReadOnlyList<INode> nodes, double youngModulus, double penaltyFactorMultiplier, int masterSurfaceOrder, int slaveSurfaceOrder, int integrationPointsPerNaturalAxis,
+		public ContactSurfaceToSurface3DSerendipitySecondOrder(IReadOnlyList<INode> nodes, double youngModulus, double penaltyFactorMultiplier, int masterSurfaceOrder, int slaveSurfaceOrder, int integrationPointsPerNaturalAxis,
 			IElementDofEnumerator dofEnumerator)
 			: this(nodes, youngModulus, penaltyFactorMultiplier, 1d, masterSurfaceOrder, slaveSurfaceOrder, integrationPointsPerNaturalAxis)
 		{
 			this.dofEnumerator = dofEnumerator;
 		}
-		public ContactSurfaceToSurface3D(IReadOnlyList<INode> nodes, double penaltyFactor, int masterSurfaceOrder, int slaveSurfaceOrder, int integrationPointsPerNaturalAxis,
+		public ContactSurfaceToSurface3DSerendipitySecondOrder(IReadOnlyList<INode> nodes, double penaltyFactor, int masterSurfaceOrder, int slaveSurfaceOrder, int integrationPointsPerNaturalAxis,
 			IElementDofEnumerator dofEnumerator)
 			: this(nodes, penaltyFactor, 1.0, masterSurfaceOrder, slaveSurfaceOrder, integrationPointsPerNaturalAxis)
 		{
@@ -409,15 +383,15 @@ namespace MGroup.FEM.Structural.Line
 				var N2 = 1.0 / 4.0 * (1.0 + ksi1) * (1.0 - ksi2);
 				var N3 = 1.0 / 4.0 * (1.0 + ksi1) * (1.0 + ksi2);
 				var N4 = 1.0 / 4.0 * (1.0 - ksi1) * (1.0 + ksi2);
-				var N5 = 1.0 / 4.0 * ksi3 * ksi4 * (1 - ksi3) * (1 - ksi4);
-				var N6 = -1.0 / 2.0 * ksi4 * (1 + ksi3) * (1 - ksi3) * (1 - ksi4);
-				var N7 = -1.0 / 4.0 * ksi3 * ksi4 * (1 + ksi3) * (1 - ksi4);
-				var N8 = 1.0 / 2.0 * ksi3 * (1 + ksi3) * (1 + ksi4) * (1 - ksi4);
-				var N9 = 1.0 / 4.0 * ksi3 * ksi4 * (1 + ksi3) * (1 + ksi4);
-				var N10 = 1.0 / 2.0 * ksi4 * (1 - ksi3) * (1 + ksi3) * (1 + ksi4);
-				var N11 = -1.0 / 4.0 * ksi3 * ksi4 * (1 - ksi3) * (1 + ksi4);
-				var N12 = -1.0 / 2.0 * ksi3 * (1 - ksi3) * (1 + ksi4) * (1 - ksi4);
-				var N13 = (1 - Math.Pow(ksi3, 2)) * (1 + ksi4) * (1 - ksi4);
+
+				var N5 = 1.0 / 4.0 * (1d + ksi3) * (1d + ksi4) - 1.0 / 4.0 * (1d + ksi3) * (1 - ksi4 * ksi4) - 1.0 / 4.0 * (1d - ksi3 * ksi3) * (1d + ksi4 );
+				var N6 = 1.0 / 4.0 * (1d - ksi3) * (1d + ksi4) - 1.0 / 4.0 * (1d - ksi3 * ksi3) * (1 + ksi4) - 1.0 / 4.0 * (1d - ksi3) * (1d - ksi4 * ksi4);
+				var N7 = 1.0 / 4.0 * (1d - ksi3) * (1d - ksi4) - 1.0 / 4.0 * (1d - ksi3 * ksi3) * (1 - ksi4) - 1.0 / 4.0 * (1d - ksi3) * (1d - ksi4 * ksi4);
+				var N8 = 1.0 / 4.0 * (1d + ksi3) * (1d - ksi4) - 1.0 / 4.0 * (1d - ksi3 * ksi3) * (1 - ksi4) - 1.0 / 4.0 * (1d + ksi3) * (1d - ksi4 * ksi4);
+				var N9 = 1.0 / 2.0 * (1d - ksi3 * ksi3) * (1d + ksi4);
+				var N10 = 1.0 / 2.0 * (1d - ksi3) * (1d - ksi4 * ksi4);
+				var N11 = 1.0 / 2.0 * (1d - ksi3 * ksi3) * (1d - ksi4);
+				var N12 = 1.0 / 2.0 * (1d + ksi3) * (1d - ksi4 * ksi4);
 
 				var dN11 = -1.0 / 4.0 * (1.0 - ksi2);
 				var dN21 = 1.0 / 4.0 * (1.0 - ksi2);
@@ -434,113 +408,109 @@ namespace MGroup.FEM.Structural.Line
 				var dN312 = 1.0 / 4.0;
 				var dN412 = -1.0 / 4.0;
 
-				var dN53 = 1.0 / 4.0 * ksi4 * (1 - ksi4) * (1 - 2 * ksi3);
-				var dN63 = (1 - ksi4) * ksi3 * ksi4;
-				var dN73 = -1.0 / 4.0 * ksi4 * (1 - ksi4) * (1 + 2 * ksi3);
-				var dN83 = 1.0 / 2.0 * (1 + 2 * ksi3) * (1 - Math.Pow(ksi4, 2));
-				var dN93 = 1.0 / 4.0 * ksi4 * (1 + ksi4) * (2 * ksi3 + 1);
-				var dN103 = -(ksi4 + 1) * ksi3 * ksi4;
-				var dN113 = -1.0 / 4.0 * ksi4 * (1 + ksi4) * (1 - 2 * ksi3);
-				var dN123 = -1.0 / 2.0 * (1 - 2 * ksi3) * (1 - Math.Pow(ksi4, 2));
-				var dN133 = -2 * ksi3 * (1 - Math.Pow(ksi4, 2));
+				var dN53 = 1.0 / 4.0 * (2d * ksi3 + ksi4) * (1d + ksi4);
+				var dN63 = 1.0 / 4.0 * (2d * ksi3 - ksi4) * (1d + ksi4);
+				var dN73 = 1.0 / 4.0 * (2d * ksi3 + ksi4) * (1d - ksi4);
+				var dN83 = 1.0 / 4.0 * (2d * ksi3 - ksi4) * (1d - ksi4);
+				var dN93 = -ksi3 * (1d + ksi4);
+				var dN103 = -1.0 / 2.0 * (1d - ksi4* ksi4);
+				var dN113 = -ksi3 * (1d - ksi4);
+				var dN123 = 1.0 / 2.0 * (1d - ksi4 * ksi4);
 
-				var dN533 = -1.0 / 2.0 * ksi4 * (1 - ksi4);
-				var dN633 = (1 - ksi4) * ksi4;
-				var dN733 = -1.0 / 2.0 * ksi4 * (1 - ksi4);
-				var dN833 = 1 - Math.Pow(ksi4, 2);
-				var dN933 = 1.0 / 2.0 * ksi4 * (1 + ksi4);
-				var dN1033 = -(ksi4 + 1) * ksi4;
-				var dN1133 = 1.0 / 2.0 * ksi4 * (1 + ksi4);
-				var dN1233 = 1 - Math.Pow(ksi4, 2);
-				var dN1333 = -2 * (1 - Math.Pow(ksi4, 2));
+				var dN533 = 1.0 / 2.0 * (1d + ksi4);
+				var dN633 = 1.0 / 2.0 * (1d + ksi4);
+				var dN733 = 1.0 / 2.0 * (1d - ksi4);
+				var dN833 = 1.0 / 2.0 * (1d - ksi4);
+				var dN933 = -(1d + ksi4);
+				var dN1033 = 0d;
+				var dN1133 = (ksi4 - 1d);
+				var dN1233 = 0d;
 
-				var dN54 = 1.0 / 4.0 * ksi3 * (1 - ksi3) * (1 - 2 * ksi4);
-				var dN64 = -1.0 / 2.0 * (1 - Math.Pow(ksi3, 2)) * (1 - 2 * ksi4);
-				var dN74 = -1.0 / 4.0 * ksi3 * (1 + ksi3) * (1 - 2 * ksi4);
-				var dN84 = -(ksi3 + 1) * ksi4 * ksi3;
-				var dN94 = 1.0 / 4.0 * ksi3 * (1 + ksi3) * (1 + 2 * ksi4);
-				var dN104 = 1.0 / 2.0 * (1 - Math.Pow(ksi3, 2)) * (1 + 2 * ksi4);
-				var dN114 = -1.0 / 4.0 * ksi3 * (1 - ksi3) * (1 + 2 * ksi4);
-				var dN124 = (1 - ksi3) * ksi3 * ksi4;
-				var dN134 = -2 * ksi4 * (1 - Math.Pow(ksi3, 2));
+				var dN54 = 1.0 / 4.0 * (ksi3 + 2d * ksi4) * (1d + ksi3);
+				var dN64 = 1.0 / 4.0 * (-ksi3 + 2d * ksi4) * (1d - ksi3);
+				var dN74 = 1.0 / 4.0 * (ksi3 + 2d * ksi4) * (1d - ksi3);
+				var dN84 = 1.0 / 4.0 * (-ksi3 + 2d * ksi4) * (1d + ksi3);
+				var dN94 = 1.0 / 2.0 * (1d - Math.Pow(ksi3, 2));
+				var dN104 = -(1d - ksi3) * ksi4;
+				var dN114 = -1.0 / 2.0 * (1d - Math.Pow(ksi3, 2));
+				var dN124 = -(1d + ksi3) * ksi4;
 
-				var dN544 = -1.0 / 2.0 * ksi3 * (1 - ksi3);
-				var dN644 = 1 - Math.Pow(ksi3, 2);
-				var dN744 = 1.0 / 2.0 * ksi3 * (1 + ksi3);
-				var dN844 = -(ksi3 + 1) * ksi3;
-				var dN944 = 1.0 / 2.0 * ksi3 * (1 + ksi3);
-				var dN1044 = 1 - Math.Pow(ksi3, 2);
-				var dN1144 = -1.0 / 2.0 * ksi3 * (1 - ksi3);
-				var dN1244 = (1 - ksi3) * ksi3;
-				var dN1344 = -2 * (1 - Math.Pow(ksi3, 2));
+				var dN544 = 1.0 / 2.0 * (1d + ksi3);
+				var dN644 = 1.0 / 2.0 * (1d - ksi3);
+				var dN744 = 1.0 / 2.0 * (1d - ksi3);
+				var dN844 = 1.0 / 2.0 * (1d + ksi3);
+				var dN944 = 0d;
+				var dN1044 = ksi3 - 1d;
+				var dN1144 = 0d;
+				var dN1244 = -1d - ksi3;
 
 				var aMatrix = new double[,]
 					{
-					{ -N1 ,0.0, 0.0 ,-N2 ,0.0 ,0.0 ,-N3, 0.0, 0.0, -N4, 0.0, 0.0, N5 ,0.0, 0.0 , N6, 0.0 ,0.0 , N7, 0.0, 0.0, N8, 0.0, 0.0, N9, 0.0, 0.0, N10, 0.0, 0.0, N11, 0.0, 0.0, N12, 0.0, 0.0, N13, 0.0, 0.0 },
-					{ 0.0, -N1 ,0.0, 0.0 ,-N2 ,0.0 ,0.0 ,-N3, 0.0, 0.0, -N4, 0.0, 0.0, N5 ,0.0, 0.0 , N6, 0.0 ,0.0 , N7, 0.0, 0.0, N8, 0.0,0.0, N9, 0.0, 0.0, N10, 0.0, 0.0, N11, 0.0, 0.0, N12, 0.0, 0.0, N13, 0.0 },
-					{ 0.0, 0.0, -N1 ,0.0, 0.0 ,-N2 ,0.0 ,0.0 ,-N3, 0.0, 0.0, -N4, 0.0, 0.0, N5 ,0.0, 0.0 , N6, 0.0 ,0.0 , N7, 0.0, 0.0, N8, 0.0,0.0, N9, 0.0, 0.0, N10, 0.0, 0.0, N11, 0.0, 0.0, N12, 0.0, 0.0, N13 }
+					{ -N1 ,0.0, 0.0 ,-N2 ,0.0 ,0.0 ,-N3, 0.0, 0.0, -N4, 0.0, 0.0, N5 ,0.0, 0.0 , N6, 0.0 ,0.0 , N7, 0.0, 0.0, N8, 0.0, 0.0, N9, 0.0, 0.0, N10, 0.0, 0.0, N11, 0.0, 0.0, N12, 0.0, 0.0},
+					{ 0.0, -N1 ,0.0, 0.0 ,-N2 ,0.0 ,0.0 ,-N3, 0.0, 0.0, -N4, 0.0, 0.0, N5 ,0.0, 0.0 , N6, 0.0 ,0.0 , N7, 0.0, 0.0, N8, 0.0,0.0, N9, 0.0, 0.0, N10, 0.0, 0.0, N11, 0.0, 0.0, N12, 0.0 },
+					{ 0.0, 0.0, -N1 ,0.0, 0.0 ,-N2 ,0.0 ,0.0 ,-N3, 0.0, 0.0, -N4, 0.0, 0.0, N5 ,0.0, 0.0 , N6, 0.0 ,0.0 , N7, 0.0, 0.0, N8, 0.0,0.0, N9, 0.0, 0.0, N10, 0.0, 0.0, N11, 0.0, 0.0, N12 }
 					};
 
 				var da1Matrix = new double[,]
 					{
-					{ -dN11 ,0.0, 0.0 ,-dN21 ,0.0 ,0.0 ,-dN31, 0.0, 0.0, -dN41, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, -dN11 ,0.0, 0.0 ,-dN21 ,0.0 ,0.0 ,-dN31, 0.0, 0.0, -dN41, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, 0.0, -dN11 ,0.0, 0.0 ,-dN21 ,0.0 ,0.0 ,-dN31, 0.0, 0.0, -dN41, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
+					{ -dN11 ,0.0, 0.0 ,-dN21 ,0.0 ,0.0 ,-dN31, 0.0, 0.0, -dN41, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, -dN11 ,0.0, 0.0 ,-dN21 ,0.0 ,0.0 ,-dN31, 0.0, 0.0, -dN41, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, 0.0, -dN11 ,0.0, 0.0 ,-dN21 ,0.0 ,0.0 ,-dN31, 0.0, 0.0, -dN41, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
 					};
 
 				var da11Matrix = new double[,]
 					{
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
 					};
 
 				var da12Matrix = new double[,]
 					{
-					{ -dN112 ,0.0, 0.0 ,-dN212 ,0.0 ,0.0 ,-dN312, 0.0, 0.0, -dN412, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, -dN112 ,0.0, 0.0 ,-dN212 ,0.0 ,0.0 ,-dN312, 0.0, 0.0, -dN412, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, 0.0, -dN112 ,0.0, 0.0 ,-dN212 ,0.0 ,0.0 ,-dN312, 0.0, 0.0, -dN412, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
+					{ -dN112 ,0.0, 0.0 ,-dN212 ,0.0 ,0.0 ,-dN312, 0.0, 0.0, -dN412, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, -dN112 ,0.0, 0.0 ,-dN212 ,0.0 ,0.0 ,-dN312, 0.0, 0.0, -dN412, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, 0.0, -dN112 ,0.0, 0.0 ,-dN212 ,0.0 ,0.0 ,-dN312, 0.0, 0.0, -dN412, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
 					 };
 				var da2Matrix = new double[,]
 					{
-					{ -dN12 ,0.0, 0.0 ,-dN22 ,0.0 ,0.0 ,-dN32, 0.0, 0.0, -dN42, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, -dN12 ,0.0, 0.0 ,-dN22 ,0.0 ,0.0 ,-dN32, 0.0, 0.0, -dN42, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, 0.0, -dN12 ,0.0, 0.0 ,-dN22 ,0.0 ,0.0 ,-dN32, 0.0, 0.0, -dN42, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
+					{ -dN12 ,0.0, 0.0 ,-dN22 ,0.0 ,0.0 ,-dN32, 0.0, 0.0, -dN42, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, -dN12 ,0.0, 0.0 ,-dN22 ,0.0 ,0.0 ,-dN32, 0.0, 0.0, -dN42, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, 0.0, -dN12 ,0.0, 0.0 ,-dN22 ,0.0 ,0.0 ,-dN32, 0.0, 0.0, -dN42, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 					};
 
 				var da22Matrix = new double[,]
 					{
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
 					};
 
 				var da3Matrix = new double[,]
 					{
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN53 ,0.0, 0.0 , dN63, 0.0 ,0.0 , dN73, 0.0, 0.0, dN83, 0.0, 0.0, dN93, 0.0, 0.0, dN103, 0.0, 0.0, dN113, 0.0, 0.0, dN123, 0.0, 0.0, dN133, 0.0, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN53 ,0.0, 0.0 , dN63, 0.0 ,0.0 , dN73, 0.0, 0.0, dN83, 0.0,0.0, dN93, 0.0, 0.0, dN103, 0.0, 0.0, dN113, 0.0, 0.0, dN123, 0.0, 0.0, dN133, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN53 ,0.0, 0.0 , dN63, 0.0 ,0.0 , dN73, 0.0, 0.0, dN83, 0.0,0.0, dN93, 0.0, 0.0, dN103, 0.0, 0.0, dN113, 0.0, 0.0, dN123, 0.0, 0.0, dN133 }
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN53 ,0.0, 0.0 , dN63, 0.0 ,0.0 , dN73, 0.0, 0.0, dN83, 0.0, 0.0, dN93, 0.0, 0.0, dN103, 0.0, 0.0, dN113, 0.0, 0.0, dN123, 0.0, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN53 ,0.0, 0.0 , dN63, 0.0 ,0.0 , dN73, 0.0, 0.0, dN83, 0.0,0.0, dN93, 0.0, 0.0, dN103, 0.0, 0.0, dN113, 0.0, 0.0, dN123, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN53 ,0.0, 0.0 , dN63, 0.0 ,0.0 , dN73, 0.0, 0.0, dN83, 0.0,0.0, dN93, 0.0, 0.0, dN103, 0.0, 0.0, dN113, 0.0, 0.0, dN123 }
 					};
 
 				var da33Matrix = new double[,]
 					{
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN533 ,0.0, 0.0 , dN633, 0.0 ,0.0 , dN733, 0.0, 0.0, dN833, 0.0, 0.0, dN933, 0.0, 0.0, dN1033, 0.0, 0.0, dN1133, 0.0, 0.0, dN1233, 0.0, 0.0, dN1333, 0.0, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN533 ,0.0, 0.0 , dN633, 0.0 ,0.0 , dN733, 0.0, 0.0, dN833, 0.0,0.0, dN933, 0.0, 0.0, dN1033, 0.0, 0.0, dN1133, 0.0, 0.0, dN1233, 0.0, 0.0, dN1333, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN533 ,0.0, 0.0 , dN633, 0.0 ,0.0 , dN733, 0.0, 0.0, dN833, 0.0,0.0, dN933, 0.0, 0.0, dN1033, 0.0, 0.0, dN1133, 0.0, 0.0, dN1233, 0.0, 0.0, dN1333 }
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN533 ,0.0, 0.0 , dN633, 0.0 ,0.0 , dN733, 0.0, 0.0, dN833, 0.0, 0.0, dN933, 0.0, 0.0, dN1033, 0.0, 0.0, dN1133, 0.0, 0.0, dN1233, 0.0, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN533 ,0.0, 0.0 , dN633, 0.0 ,0.0 , dN733, 0.0, 0.0, dN833, 0.0,0.0, dN933, 0.0, 0.0, dN1033, 0.0, 0.0, dN1133, 0.0, 0.0, dN1233, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN533 ,0.0, 0.0 , dN633, 0.0 ,0.0 , dN733, 0.0, 0.0, dN833, 0.0,0.0, dN933, 0.0, 0.0, dN1033, 0.0, 0.0, dN1133, 0.0, 0.0, dN1233 }
 					};
 
 				var da4Matrix = new double[,]
 					{
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN54 ,0.0, 0.0 , dN64, 0.0 ,0.0 , dN74, 0.0, 0.0, dN84, 0.0, 0.0, dN94, 0.0, 0.0, dN104, 0.0, 0.0, dN114, 0.0, 0.0, dN124, 0.0, 0.0, dN134, 0.0, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN54 ,0.0, 0.0 , dN64, 0.0 ,0.0 , dN74, 0.0, 0.0, dN84, 0.0,0.0, dN94, 0.0, 0.0, dN104, 0.0, 0.0, dN114, 0.0, 0.0, dN124, 0.0, 0.0, dN134, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN54 ,0.0, 0.0 , dN64, 0.0 ,0.0 , dN74, 0.0, 0.0, dN84, 0.0,0.0, dN94, 0.0, 0.0, dN104, 0.0, 0.0, dN114, 0.0, 0.0, dN124, 0.0, 0.0, dN134 }
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN54 ,0.0, 0.0 , dN64, 0.0 ,0.0 , dN74, 0.0, 0.0, dN84, 0.0, 0.0, dN94, 0.0, 0.0, dN104, 0.0, 0.0, dN114, 0.0, 0.0, dN124, 0.0, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN54 ,0.0, 0.0 , dN64, 0.0 ,0.0 , dN74, 0.0, 0.0, dN84, 0.0,0.0, dN94, 0.0, 0.0, dN104, 0.0, 0.0, dN114, 0.0, 0.0, dN124, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN54 ,0.0, 0.0 , dN64, 0.0 ,0.0 , dN74, 0.0, 0.0, dN84, 0.0,0.0, dN94, 0.0, 0.0, dN104, 0.0, 0.0, dN114, 0.0, 0.0, dN124 }
 					};
 
 				var da44Matrix = new double[,]
 					{
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN544 ,0.0, 0.0 , dN644, 0.0 ,0.0 , dN744, 0.0, 0.0, dN844, 0.0, 0.0, dN944, 0.0, 0.0, dN1044, 0.0, 0.0, dN1144, 0.0, 0.0, dN1244, 0.0, 0.0, dN1344, 0.0, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN544 ,0.0, 0.0 , dN644, 0.0 ,0.0 , dN744, 0.0, 0.0, dN844, 0.0,0.0, dN944, 0.0, 0.0, dN1044, 0.0, 0.0, dN1144, 0.0, 0.0, dN1244, 0.0, 0.0, dN1344, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN544 ,0.0, 0.0 , dN644, 0.0 ,0.0 , dN744, 0.0, 0.0, dN844, 0.0,0.0, dN944, 0.0, 0.0, dN1044, 0.0, 0.0, dN1144, 0.0, 0.0, dN1244, 0.0, 0.0, dN1344 }
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN544 ,0.0, 0.0 , dN644, 0.0 ,0.0 , dN744, 0.0, 0.0, dN844, 0.0, 0.0, dN944, 0.0, 0.0, dN1044, 0.0, 0.0, dN1144, 0.0, 0.0, dN1244, 0.0, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN544 ,0.0, 0.0 , dN644, 0.0 ,0.0 , dN744, 0.0, 0.0, dN844, 0.0,0.0, dN944, 0.0, 0.0, dN1044, 0.0, 0.0, dN1144, 0.0, 0.0, dN1244, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN544 ,0.0, 0.0 , dN644, 0.0 ,0.0 , dN744, 0.0, 0.0, dN844, 0.0,0.0, dN944, 0.0, 0.0, dN1044, 0.0, 0.0, dN1144, 0.0, 0.0, dN1244 }
 					};
 
 				var T1 = new Tuple<double[,], double[,], double[,], double[,], double[,]>(da1Matrix, da11Matrix, da2Matrix, da22Matrix, da12Matrix);
@@ -549,147 +519,144 @@ namespace MGroup.FEM.Structural.Line
 			}
 			else if (MasterSurfaceOrder == 2 && SlaveSurfaceOrder == 1)
 			{
-				var N1 = 1.0 / 4.0 * ksi1 * ksi2 * (1 - ksi1) * (1 - ksi2);
-				var N2 = -1.0 / 2.0 * ksi2 * (1 + ksi1) * (1 - ksi1) * (1 - ksi2);
-				var N3 = -1.0 / 4.0 * ksi1 * ksi2 * (1 + ksi1) * (1 - ksi2);
-				var N4 = 1.0 / 2.0 * ksi1 * (1 + ksi1) * (1 + ksi2) * (1 - ksi2);
-				var N5 = 1.0 / 4.0 * ksi1 * ksi2 * (1 + ksi1) * (1 + ksi2);
-				var N6 = 1.0 / 2.0 * ksi2 * (1 - ksi1) * (1 + ksi1) * (1 + ksi2);
-				var N7 = -1.0 / 4.0 * ksi1 * ksi2 * (1 - ksi1) * (1 + ksi2);
-				var N8 = -1.0 / 2.0 * ksi1 * (1 - ksi1) * (1 + ksi2) * (1 - ksi2);
-				var N9 = (1 - Math.Pow(ksi1, 2)) * (1 + ksi2) * (1 - ksi2);
-				var N10 = 1.0 / 4.0 * (1.0 - ksi3) * (1.0 - ksi4);
-				var N11 = 1.0 / 4.0 * (1.0 + ksi3) * (1.0 - ksi4);
-				var N12 = 1.0 / 4.0 * (1.0 + ksi3) * (1.0 + ksi4);
-				var N13 = 1.0 / 4.0 * (1.0 - ksi3) * (1.0 + ksi4);
+				
+				var N1 = 1.0 / 4.0 * (1d + ksi1) * (1d + ksi2) - 1.0 / 4.0 * (1d + ksi1) * (1 - ksi2 * ksi2) - 1.0 / 4.0 * (1d - ksi1 * ksi1) * (1d + ksi2);
+				var N2 = 1.0 / 4.0 * (1d - ksi1) * (1d + ksi2) - 1.0 / 4.0 * (1d - ksi1 * ksi1) * (1 + ksi2) - 1.0 / 4.0 * (1d - ksi1) * (1d - ksi2 * ksi2);
+				var N3 = 1.0 / 4.0 * (1d - ksi1) * (1d - ksi2) - 1.0 / 4.0 * (1d - ksi1 * ksi1) * (1 - ksi2) - 1.0 / 4.0 * (1d - ksi1) * (1d - ksi2 * ksi2);
+				var N4 = 1.0 / 4.0 * (1d + ksi1) * (1d - ksi2) - 1.0 / 4.0 * (1d - ksi1 * ksi1) * (1 - ksi2) - 1.0 / 4.0 * (1d + ksi1) * (1d - ksi2 * ksi2);
+				var N5 = 1.0 / 2.0 * (1d - ksi1 * ksi1) * (1d + ksi2);
+				var N6 = 1.0 / 2.0 * (1d - ksi1) * (1d - ksi2 * ksi2);
+				var N7 = 1.0 / 2.0 * (1d - ksi1 * ksi1) * (1d - ksi2);
+				var N8 = 1.0 / 2.0 * (1d + ksi1) * (1d - ksi2 * ksi2);
 
-				var dN11 = 1.0 / 4.0 * ksi2 * (1 - ksi2) * (1 - 2 * ksi1);
-				var dN21 = (1 - ksi2) * ksi1 * ksi2;
-				var dN31 = -1.0 / 4.0 * ksi2 * (1 - ksi2) * (1 + 2 * ksi1);
-				var dN41 = 1.0 / 2.0 * (1 + 2 * ksi1) * (1 - Math.Pow(ksi2, 2));
-				var dN51 = 1.0 / 4.0 * ksi2 * (1 + ksi2) * (2 * ksi1 + 1);
-				var dN61 = -(ksi2 + 1) * ksi1 * ksi2;
-				var dN71 = -1.0 / 4.0 * ksi2 * (1 + ksi2) * (1 - 2 * ksi1);
-				var dN81 = -1.0 / 2.0 * (1 - 2 * ksi1) * (1 - Math.Pow(ksi2, 2));
-				var dN91 = -2 * ksi1 * (1 - Math.Pow(ksi2, 2));
+				var dN11 = 1.0 / 4.0 * (2d * ksi1 + ksi2) * (1d + ksi2);
+				var dN21 = 1.0 / 4.0 * (2d * ksi1 - ksi2) * (1d + ksi2);
+				var dN31 = 1.0 / 4.0 * (2d * ksi1 + ksi2) * (1d - ksi2);
+				var dN41 = 1.0 / 4.0 * (2d * ksi1 - ksi2) * (1d - ksi2);
+				var dN51 = -ksi1 * (1d + ksi2);
+				var dN61 = -1.0 / 2.0 * (1d - ksi2 * ksi2);
+				var dN71 = -ksi1 * (1d - ksi2);
+				var dN81 = 1.0 / 2.0 * (1d - ksi2 * ksi2);
 
-				var dN111 = -1.0 / 2.0 * ksi2 * (1 - ksi2);
-				var dN211 = (1 - ksi2) * ksi2;
-				var dN311 = -1.0 / 2.0 * ksi2 * (1 - ksi2);
-				var dN411 = 1 - Math.Pow(ksi2, 2);
-				var dN511 = 1.0 / 2.0 * ksi2 * (1 + ksi2);
-				var dN611 = -(ksi2 + 1) * ksi2;
-				var dN711 = 1.0 / 2.0 * ksi2 * (1 + ksi2);
-				var dN811 = 1 - Math.Pow(ksi2, 2);
-				var dN911 = -2 * (1 - Math.Pow(ksi2, 2));
+				var dN111 = 1.0 / 2.0 * (1d + ksi2);
+				var dN211 = 1.0 / 2.0 * (1d + ksi2);
+				var dN311 = 1.0 / 2.0 * (1d - ksi2);
+				var dN411 = 1.0 / 2.0 * (1d - ksi2);
+				var dN511 = -(1d + ksi2);
+				var dN611 = 0d;
+				var dN711 = (ksi2 - 1d);
+				var dN811 = 0d;
 
-				var dN12 = 1.0 / 4.0 * ksi1 * (1 - ksi1) * (1 - 2 * ksi2);
-				var dN22 = -1.0 / 2.0 * (1 - Math.Pow(ksi1, 2)) * (1 - 2 * ksi2);
-				var dN32 = -1.0 / 4.0 * ksi1 * (1 + ksi1) * (1 - 2 * ksi2);
-				var dN42 = -(ksi1 + 1) * ksi2 * ksi1;
-				var dN52 = 1.0 / 4.0 * ksi1 * (1 + ksi1) * (1 + 2 * ksi2);
-				var dN62 = 1.0 / 2.0 * (1 - Math.Pow(ksi1, 2)) * (1 + 2 * ksi2);
-				var dN72 = -1.0 / 4.0 * ksi1 * (1 - ksi1) * (1 + 2 * ksi2);
-				var dN82 = (1 - ksi1) * ksi1 * ksi2;
-				var dN92 = -2 * ksi2 * (1 - Math.Pow(ksi1, 2));
+				var dN12 = 1.0 / 4.0 * (ksi1 + 2d * ksi2) * (1d + ksi1);
+				var dN22 = 1.0 / 4.0 * (-ksi1 + 2d * ksi2) * (1d - ksi1);
+				var dN32 = 1.0 / 4.0 * (ksi1 + 2d * ksi2) * (1d - ksi1);
+				var dN42 = 1.0 / 4.0 * (-ksi1 + 2d * ksi2) * (1d + ksi1);
+				var dN52 = 1.0 / 2.0 * (1d - Math.Pow(ksi1, 2));
+				var dN62 = -(1d - ksi1) * ksi2;
+				var dN72 = -1.0 / 2.0 * (1d - Math.Pow(ksi1, 2));
+				var dN82 = -(1d + ksi1) * ksi2;
 
-				var dN122 = -1.0 / 2.0 * ksi1 * (1 - ksi1);
-				var dN222 = 1 - Math.Pow(ksi1, 2);
-				var dN322 = 1.0 / 2.0 * ksi1 * (1 + ksi1);
-				var dN422 = -(ksi1 + 1) * ksi1;
-				var dN522 = 1.0 / 2.0 * ksi1 * (1 + ksi1);
-				var dN622 = 1 - Math.Pow(ksi1, 2);
-				var dN722 = -1.0 / 2.0 * ksi1 * (1 - ksi1);
-				var dN822 = (1 - ksi1) * ksi1;
-				var dN922 = -2 * (1 - Math.Pow(ksi1, 2));
+				var dN122 = 1.0 / 2.0 * (1d + ksi1);
+				var dN222 = 1.0 / 2.0 * (1d - ksi1);
+				var dN322 = 1.0 / 2.0 * (1d - ksi1);
+				var dN422 = 1.0 / 2.0 * (1d + ksi1);
+				var dN522 = 0d;
+				var dN622 = ksi1 - 1d;
+				var dN722 = 0d;
+				var dN822 = -1d - ksi1;
 
-				var dN112 = 1.0 / 4.0 * (1 - 2 * ksi2) * (1 - 2 * ksi1);
-				var dN212 = (1 - 2 * ksi2) * ksi1;
-				var dN312 = -1.0 / 4.0 * (1 - 2 * ksi2) * (1 + 2 * ksi1);
-				var dN412 = -(1 + 2 * ksi1) * ksi2;
-				var dN512 = 1.0 / 4.0 * (1 + 2 * ksi2) * (2 * ksi1 + 1);
-				var dN612 = -(1 + 2 * ksi2) * ksi1;
-				var dN712 = -1.0 / 4.0 * (1 + 2 * ksi2) * (1 - 2 * ksi1);
-				var dN812 = (1 - 2 * ksi1) * ksi2;
-				var dN912 = 4 * ksi1 * ksi2;
+				var dN112 = 1.0 / 4.0 * (2d * ksi1 + 2d * ksi2 + 1d);
+				var dN212 = 1.0 / 4.0 * (2d * ksi1 - 2d * ksi2 - 1d);
+				var dN312 = 1.0 / 4.0 * (-2d * ksi1 - 2d * ksi2 + 1d);
+				var dN412 = 1.0 / 4.0 * (-2d * ksi1 + 2d * ksi2 - 1d);
+				var dN512 = -ksi1;
+				var dN612 = ksi2;
+				var dN712 = ksi1;
+				var dN812 = -ksi2;
 
-				var dN103 = -1.0 / 4.0 * (1.0 - ksi4);
-				var dN113 = 1.0 / 4.0 * (1.0 - ksi4);
-				var dN123 = 1.0 / 4.0 * (1.0 + ksi4);
-				var dN133 = -1.0 / 4.0 * (1.0 + ksi4);
 
-				var dN104 = -1.0 / 4.0 * (1.0 - ksi3);
-				var dN114 = -1.0 / 4.0 * (1.0 + ksi3);
-				var dN124 = 1.0 / 4.0 * (1.0 + ksi3);
-				var dN134 = 1.0 / 4.0 * (1.0 - ksi3);
+				var N9 = 1.0 / 4.0 * (1.0 - ksi3) * (1.0 - ksi4);
+				var N10 = 1.0 / 4.0 * (1.0 + ksi3) * (1.0 - ksi4);
+				var N11 = 1.0 / 4.0 * (1.0 + ksi3) * (1.0 + ksi4);
+				var N12 = 1.0 / 4.0 * (1.0 - ksi3) * (1.0 + ksi4);
+
+				var dN93 = -1.0 / 4.0 * (1.0 - ksi4);
+				var dN103 = 1.0 / 4.0 * (1.0 - ksi4);
+				var dN113 = 1.0 / 4.0 * (1.0 + ksi4);
+				var dN123 = -1.0 / 4.0 * (1.0 + ksi4);
+
+				var dN94 = -1.0 / 4.0 * (1.0 - ksi3);
+				var dN104 = -1.0 / 4.0 * (1.0 + ksi3);
+				var dN114 = 1.0 / 4.0 * (1.0 + ksi3);
+				var dN124 = 1.0 / 4.0 * (1.0 - ksi3);
 
 				var aMatrix = new double[,]
 					{
-					{ -N1 ,0.0, 0.0 ,-N2 ,0.0 ,0.0 ,-N3, 0.0, 0.0, -N4, 0.0, 0.0, -N5 ,0.0, 0.0 , -N6, 0.0 ,0.0 , -N7, 0.0, 0.0, -N8, 0.0, 0.0, -N9, 0.0, 0.0, N10, 0.0, 0.0, N11, 0.0, 0.0, N12, 0.0, 0.0, N13, 0.0, 0.0 },
-					{ 0.0, -N1 ,0.0, 0.0 ,-N2 ,0.0 ,0.0 ,-N3, 0.0, 0.0, -N4, 0.0, 0.0, -N5 ,0.0, 0.0 , -N6, 0.0 ,0.0 , -N7, 0.0, 0.0, -N8, 0.0,0.0, -N9, 0.0, 0.0, N10, 0.0, 0.0, N11, 0.0, 0.0, N12, 0.0, 0.0, N13, 0.0 },
-					{ 0.0, 0.0, -N1 ,0.0, 0.0 ,-N2 ,0.0 ,0.0 ,-N3, 0.0, 0.0, -N4, 0.0, 0.0, -N5 ,0.0, 0.0 , -N6, 0.0 ,0.0 , -N7, 0.0, 0.0, -N8, 0.0, 0.0, -N9, 0.0, 0.0, N10, 0.0, 0.0, N11, 0.0, 0.0, N12, 0.0, 0.0, N13 }
+					{ -N1 ,0.0, 0.0 ,-N2 ,0.0 ,0.0 ,-N3, 0.0, 0.0, -N4, 0.0, 0.0, -N5 ,0.0, 0.0 , -N6, 0.0 ,0.0 , -N7, 0.0, 0.0, -N8, 0.0, 0.0, N9, 0.0, 0.0, N10, 0.0, 0.0, N11, 0.0, 0.0, N12, 0.0, 0.0 },
+					{ 0.0, -N1 ,0.0, 0.0 ,-N2 ,0.0 ,0.0 ,-N3, 0.0, 0.0, -N4, 0.0, 0.0, -N5 ,0.0, 0.0 , -N6, 0.0 ,0.0 , -N7, 0.0, 0.0, -N8, 0.0,0.0, N9, 0.0, 0.0, N10, 0.0, 0.0, N11, 0.0, 0.0, N12, 0.0 },
+					{ 0.0, 0.0, -N1 ,0.0, 0.0 ,-N2 ,0.0 ,0.0 ,-N3, 0.0, 0.0, -N4, 0.0, 0.0, -N5 ,0.0, 0.0 , -N6, 0.0 ,0.0 , -N7, 0.0, 0.0, -N8, 0.0, 0.0, N9, 0.0, 0.0, N10, 0.0, 0.0, N11, 0.0, 0.0, N12 }
 					};
 
 				var da1Matrix = new double[,]
 					{
-					{ -dN11 ,0.0, 0.0 ,-dN21 ,0.0 ,0.0 ,-dN31, 0.0, 0.0, -dN41, 0.0, 0.0, -dN51 ,0.0, 0.0 , -dN61, 0.0 ,0.0 , -dN71, 0.0, 0.0, -dN81, 0.0, 0.0, -dN91, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, -dN11 ,0.0, 0.0 ,-dN21 ,0.0 ,0.0 ,-dN31, 0.0, 0.0, -dN41, 0.0, 0.0, -dN51 ,0.0, 0.0 , -dN61, 0.0 ,0.0 , -dN71, 0.0, 0.0, -dN81, 0.0,0.0, -dN91, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, 0.0, -dN11 ,0.0, 0.0 ,-dN21 ,0.0 ,0.0 ,-dN31, 0.0, 0.0, -dN41, 0.0, 0.0, -dN51 ,0.0, 0.0 , -dN61, 0.0 ,0.0 , -dN71, 0.0, 0.0, -dN81, 0.0, 0.0, -dN91, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
+					{ -dN11 ,0.0, 0.0 ,-dN21 ,0.0 ,0.0 ,-dN31, 0.0, 0.0, -dN41, 0.0, 0.0, -dN51 ,0.0, 0.0 , -dN61, 0.0 ,0.0 , -dN71, 0.0, 0.0, -dN81, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, -dN11 ,0.0, 0.0 ,-dN21 ,0.0 ,0.0 ,-dN31, 0.0, 0.0, -dN41, 0.0, 0.0, -dN51 ,0.0, 0.0 , -dN61, 0.0 ,0.0 , -dN71, 0.0, 0.0, -dN81, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, 0.0, -dN11 ,0.0, 0.0 ,-dN21 ,0.0 ,0.0 ,-dN31, 0.0, 0.0, -dN41, 0.0, 0.0, -dN51 ,0.0, 0.0 , -dN61, 0.0 ,0.0 , -dN71, 0.0, 0.0, -dN81, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
 					};
 
 				var da11Matrix = new double[,]
 					{
-					{ -dN111 ,0.0, 0.0 ,-dN211 ,0.0 ,0.0 ,-dN311, 0.0, 0.0, -dN411, 0.0, 0.0, -dN511 ,0.0, 0.0 , -dN611, 0.0 ,0.0 , -dN711, 0.0, 0.0, -dN811, 0.0, 0.0, -dN911, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, -dN111 ,0.0, 0.0 ,-dN211 ,0.0 ,0.0 ,-dN311, 0.0, 0.0, -dN411, 0.0, 0.0, -dN511 ,0.0, 0.0 , -dN611, 0.0 ,0.0 , -dN711, 0.0, 0.0, -dN811, 0.0,0.0, -dN911, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, 0.0, -dN111 ,0.0, 0.0 ,-dN211 ,0.0 ,0.0 ,-dN311, 0.0, 0.0, -dN411, 0.0, 0.0, -dN511 ,0.0, 0.0 , -dN611, 0.0 ,0.0 , -dN711, 0.0, 0.0, -dN811, 0.0, 0.0, -dN911, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
+					{ -dN111 ,0.0, 0.0 ,-dN211 ,0.0 ,0.0 ,-dN311, 0.0, 0.0, -dN411, 0.0, 0.0, -dN511 ,0.0, 0.0 , -dN611, 0.0 ,0.0 , -dN711, 0.0, 0.0, -dN811, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, -dN111 ,0.0, 0.0 ,-dN211 ,0.0 ,0.0 ,-dN311, 0.0, 0.0, -dN411, 0.0, 0.0, -dN511 ,0.0, 0.0 , -dN611, 0.0 ,0.0 , -dN711, 0.0, 0.0, -dN811, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, 0.0, -dN111 ,0.0, 0.0 ,-dN211 ,0.0 ,0.0 ,-dN311, 0.0, 0.0, -dN411, 0.0, 0.0, -dN511 ,0.0, 0.0 , -dN611, 0.0 ,0.0 , -dN711, 0.0, 0.0, -dN811, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
 					};
 
 				var da12Matrix = new double[,]
 					{
-					{ -dN112 ,0.0, 0.0 ,-dN212 ,0.0 ,0.0 ,-dN312, 0.0, 0.0, -dN412, 0.0, 0.0, -dN512 ,0.0, 0.0 , -dN612, 0.0 ,0.0 , -dN712, 0.0, 0.0, -dN812, 0.0, 0.0, -dN912, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, -dN112 ,0.0, 0.0 ,-dN212 ,0.0 ,0.0 ,-dN312, 0.0, 0.0, -dN412, 0.0, 0.0, -dN512 ,0.0, 0.0 , -dN612, 0.0 ,0.0 , -dN712, 0.0, 0.0, -dN812, 0.0,0.0, -dN912, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, 0.0, -dN112 ,0.0, 0.0 ,-dN212 ,0.0 ,0.0 ,-dN312, 0.0, 0.0, -dN412, 0.0, 0.0, -dN512 ,0.0, 0.0 , -dN612, 0.0 ,0.0 , -dN712, 0.0, 0.0, -dN812, 0.0, 0.0, -dN912, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
+					{ -dN112 ,0.0, 0.0 ,-dN212 ,0.0 ,0.0 ,-dN312, 0.0, 0.0, -dN412, 0.0, 0.0, -dN512 ,0.0, 0.0 , -dN612, 0.0 ,0.0 , -dN712, 0.0, 0.0, -dN812, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, -dN112 ,0.0, 0.0 ,-dN212 ,0.0 ,0.0 ,-dN312, 0.0, 0.0, -dN412, 0.0, 0.0, -dN512 ,0.0, 0.0 , -dN612, 0.0 ,0.0 , -dN712, 0.0, 0.0, -dN812, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, 0.0, -dN112 ,0.0, 0.0 ,-dN212 ,0.0 ,0.0 ,-dN312, 0.0, 0.0, -dN412, 0.0, 0.0, -dN512 ,0.0, 0.0 , -dN612, 0.0 ,0.0 , -dN712, 0.0, 0.0, -dN812, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
 					};
 
 				var da2Matrix = new double[,]
 					{
-					{ -dN12 ,0.0, 0.0 ,-dN22 ,0.0 ,0.0 ,-dN32, 0.0, 0.0, -dN42, 0.0, 0.0, -dN52 ,0.0, 0.0 , -dN62, 0.0 ,0.0 , -dN72, 0.0, 0.0, -dN82, 0.0, 0.0, -dN92, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, -dN12 ,0.0, 0.0 ,-dN22 ,0.0 ,0.0 ,-dN32, 0.0, 0.0, -dN42, 0.0, 0.0, -dN52 ,0.0, 0.0 , -dN62, 0.0 ,0.0 , -dN72, 0.0, 0.0, -dN82, 0.0,0.0, -dN92, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, 0.0, -dN12 ,0.0, 0.0 ,-dN22 ,0.0 ,0.0 ,-dN32, 0.0, 0.0, -dN42, 0.0, 0.0, -dN52 ,0.0, 0.0 , -dN62, 0.0 ,0.0 , -dN72, 0.0, 0.0, -dN82, 0.0, 0.0, -dN92, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
+					{ -dN12 ,0.0, 0.0 ,-dN22 ,0.0 ,0.0 ,-dN32, 0.0, 0.0, -dN42, 0.0, 0.0, -dN52 ,0.0, 0.0 , -dN62, 0.0 ,0.0 , -dN72, 0.0, 0.0, -dN82, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, -dN12 ,0.0, 0.0 ,-dN22 ,0.0 ,0.0 ,-dN32, 0.0, 0.0, -dN42, 0.0, 0.0, -dN52 ,0.0, 0.0 , -dN62, 0.0 ,0.0 , -dN72, 0.0, 0.0, -dN82, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, 0.0, -dN12 ,0.0, 0.0 ,-dN22 ,0.0 ,0.0 ,-dN32, 0.0, 0.0, -dN42, 0.0, 0.0, -dN52 ,0.0, 0.0 , -dN62, 0.0 ,0.0 , -dN72, 0.0, 0.0, -dN82, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
 					};
 
 				var da22Matrix = new double[,]
 					{
-					{ -dN122 ,0.0, 0.0 ,-dN222 ,0.0 ,0.0 ,-dN322, 0.0, 0.0, -dN422, 0.0, 0.0, -dN522 ,0.0, 0.0 , -dN622, 0.0 ,0.0 , -dN722, 0.0, 0.0, -dN822, 0.0, 0.0, -dN922, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, -dN122 ,0.0, 0.0 ,-dN222 ,0.0 ,0.0 ,-dN322, 0.0, 0.0, -dN422, 0.0, 0.0, -dN522 ,0.0, 0.0 , -dN622, 0.0 ,0.0 , -dN722, 0.0, 0.0, -dN822, 0.0,0.0, -dN922, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, 0.0, -dN122 ,0.0, 0.0 ,-dN222 ,0.0 ,0.0 ,-dN322, 0.0, 0.0, -dN422, 0.0, 0.0, -dN522 ,0.0, 0.0 , -dN622, 0.0 ,0.0 , -dN722, 0.0, 0.0, -dN822, 0.0, 0.0, -dN922, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
+					{ -dN122 ,0.0, 0.0 ,-dN222 ,0.0 ,0.0 ,-dN322, 0.0, 0.0, -dN422, 0.0, 0.0, -dN522 ,0.0, 0.0 , -dN622, 0.0 ,0.0 , -dN722, 0.0, 0.0, -dN822, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, -dN122 ,0.0, 0.0 ,-dN222 ,0.0 ,0.0 ,-dN322, 0.0, 0.0, -dN422, 0.0, 0.0, -dN522 ,0.0, 0.0 , -dN622, 0.0 ,0.0 , -dN722, 0.0, 0.0, -dN822, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, 0.0, -dN122 ,0.0, 0.0 ,-dN222 ,0.0 ,0.0 ,-dN322, 0.0, 0.0, -dN422, 0.0, 0.0, -dN522 ,0.0, 0.0 , -dN622, 0.0 ,0.0 , -dN722, 0.0, 0.0, -dN822, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
 					};
 
 				var da3Matrix = new double[,]
 					{
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN103, 0.0, 0.0, dN113, 0.0, 0.0, dN123, 0.0, 0.0, dN133, 0.0, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, dN103, 0.0, 0.0, dN113, 0.0, 0.0, dN123, 0.0, 0.0, dN133, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, dN103, 0.0, 0.0, dN113, 0.0, 0.0, dN123, 0.0, 0.0, dN133 }
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN93, 0.0, 0.0, dN103, 0.0, 0.0, dN113, 0.0, 0.0, dN123, 0.0, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, dN93, 0.0, 0.0, dN103, 0.0, 0.0, dN113, 0.0, 0.0, dN123, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, dN93, 0.0, 0.0, dN103, 0.0, 0.0, dN113, 0.0, 0.0, dN123 }
 					};
 
 				var da33Matrix = new double[,]
 					{
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
 					};
 				var da4Matrix = new double[,]
 					{
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN104, 0.0, 0.0, dN114, 0.0, 0.0, dN124, 0.0, 0.0, dN134, 0.0, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, dN104, 0.0, 0.0, dN114, 0.0, 0.0, dN124, 0.0, 0.0, dN134, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, dN104, 0.0, 0.0, dN114, 0.0, 0.0, dN124, 0.0, 0.0, dN134 }
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN94, 0.0, 0.0, dN104, 0.0, 0.0, dN114, 0.0, 0.0, dN124, 0.0, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, dN94, 0.0, 0.0, dN104, 0.0, 0.0, dN114, 0.0, 0.0, dN124, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, dN94, 0.0, 0.0, dN104, 0.0, 0.0, dN114, 0.0, 0.0, dN124 }
 					};
 
 				var da44Matrix = new double[,]
 					{
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
 					};
 
 				var T1 = new Tuple<double[,], double[,], double[,], double[,], double[,]>(da1Matrix, da11Matrix, da2Matrix, da22Matrix, da12Matrix);
@@ -698,183 +665,173 @@ namespace MGroup.FEM.Structural.Line
 			}
 			else
 			{
-				var N1 = 1.0 / 4.0 * ksi1 * ksi2 * (1 - ksi1) * (1 - ksi2);
-				var N2 = -1.0 / 2.0 * ksi2 * (1 + ksi1) * (1 - ksi1) * (1 - ksi2);
-				var N3 = -1.0 / 4.0 * ksi1 * ksi2 * (1 + ksi1) * (1 - ksi2);
-				var N4 = 1.0 / 2.0 * ksi1 * (1 + ksi1) * (1 + ksi2) * (1 - ksi2);
-				var N5 = 1.0 / 4.0 * ksi1 * ksi2 * (1 + ksi1) * (1 + ksi2);
-				var N6 = 1.0 / 2.0 * ksi2 * (1 - ksi1) * (1 + ksi1) * (1 + ksi2);
-				var N7 = -1.0 / 4.0 * ksi1 * ksi2 * (1 - ksi1) * (1 + ksi2);
-				var N8 = -1.0 / 2.0 * ksi1 * (1 - ksi1) * (1 + ksi2) * (1 - ksi2);
-				var N9 = (1 - Math.Pow(ksi1, 2)) * (1 + ksi2) * (1 - ksi2);
-				var N10 = 1.0 / 4.0 * ksi3 * ksi4 * (1 - ksi3) * (1 - ksi4);
-				var N11 = -1.0 / 2.0 * ksi4 * (1 + ksi3) * (1 - ksi3) * (1 - ksi4);
-				var N12 = -1.0 / 4.0 * ksi3 * ksi4 * (1 + ksi3) * (1 - ksi4);
-				var N13 = 1.0 / 2.0 * ksi3 * (1 + ksi3) * (1 + ksi4) * (1 - ksi4);
-				var N14 = 1.0 / 4.0 * ksi3 * ksi4 * (1 + ksi3) * (1 + ksi4);
-				var N15 = 1.0 / 2.0 * ksi4 * (1 - ksi3) * (1 + ksi3) * (1 + ksi4);
-				var N16 = -1.0 / 4.0 * ksi3 * ksi4 * (1 - ksi3) * (1 + ksi4);
-				var N17 = -1.0 / 2.0 * ksi3 * (1 - ksi3) * (1 + ksi4) * (1 - ksi4);
-				var N18 = (1 - Math.Pow(ksi3, 2)) * (1 + ksi4) * (1 - ksi4);
+				var N1 = 1.0 / 4.0 * (1d + ksi1) * (1d + ksi2) - 1.0 / 4.0 * (1d + ksi1) * (1 - ksi2 * ksi2) - 1.0 / 4.0 * (1d - ksi1 * ksi1) * (1d + ksi2);
+				var N2 = 1.0 / 4.0 * (1d - ksi1) * (1d + ksi2) - 1.0 / 4.0 * (1d - ksi1 * ksi1) * (1 + ksi2) - 1.0 / 4.0 * (1d - ksi1) * (1d - ksi2 * ksi2);
+				var N3 = 1.0 / 4.0 * (1d - ksi1) * (1d - ksi2) - 1.0 / 4.0 * (1d - ksi1 * ksi1) * (1 - ksi2) - 1.0 / 4.0 * (1d - ksi1) * (1d - ksi2 * ksi2);
+				var N4 = 1.0 / 4.0 * (1d + ksi1) * (1d - ksi2) - 1.0 / 4.0 * (1d - ksi1 * ksi1) * (1 - ksi2) - 1.0 / 4.0 * (1d + ksi1) * (1d - ksi2 * ksi2);
+				var N5 = 1.0 / 2.0 * (1d - ksi1 * ksi1) * (1d + ksi2);
+				var N6 = 1.0 / 2.0 * (1d - ksi1) * (1d - ksi2 * ksi2);
+				var N7 = 1.0 / 2.0 * (1d - ksi1 * ksi1) * (1d - ksi2);
+				var N8 = 1.0 / 2.0 * (1d + ksi1) * (1d - ksi2 * ksi2);
 
-				var dN11 = 1.0 / 4.0 * ksi2 * (1 - ksi2) * (1 - 2 * ksi1);
-				var dN21 = (1 - ksi2) * ksi1 * ksi2;
-				var dN31 = -1.0 / 4.0 * ksi2 * (1 - ksi2) * (1 + 2 * ksi1);
-				var dN41 = 1.0 / 2.0 * (1 + 2 * ksi1) * (1 - Math.Pow(ksi2, 2));
-				var dN51 = 1.0 / 4.0 * ksi2 * (1 + ksi2) * (2 * ksi1 + 1);
-				var dN61 = -(ksi2 + 1) * ksi1 * ksi2;
-				var dN71 = -1.0 / 4.0 * ksi2 * (1 + ksi2) * (1 - 2 * ksi1);
-				var dN81 = -1.0 / 2.0 * (1 - 2 * ksi1) * (1 - Math.Pow(ksi2, 2));
-				var dN91 = -2 * ksi1 * (1 - Math.Pow(ksi2, 2));
+				var dN11 = 1.0 / 4.0 * (2d * ksi1 + ksi2) * (1d + ksi2);
+				var dN21 = 1.0 / 4.0 * (2d * ksi1 - ksi2) * (1d + ksi2);
+				var dN31 = 1.0 / 4.0 * (2d * ksi1 + ksi2) * (1d - ksi2);
+				var dN41 = 1.0 / 4.0 * (2d * ksi1 - ksi2) * (1d - ksi2);
+				var dN51 = -ksi1 * (1d + ksi2);
+				var dN61 = -1.0 / 2.0 * (1d - ksi2 * ksi2);
+				var dN71 = -ksi1 * (1d - ksi2);
+				var dN81 = 1.0 / 2.0 * (1d - ksi2 * ksi2);
 
-				var dN111 = -1.0 / 2.0 * ksi2 * (1 - ksi2);
-				var dN211 = (1 - ksi2) * ksi2;
-				var dN311 = -1.0 / 2.0 * ksi2 * (1 - ksi2);
-				var dN411 = 1 - Math.Pow(ksi2, 2);
-				var dN511 = 1.0 / 2.0 * ksi2 * (1 + ksi2);
-				var dN611 = -(ksi2 + 1) * ksi2;
-				var dN711 = 1.0 / 2.0 * ksi2 * (1 + ksi2);
-				var dN811 = 1 - Math.Pow(ksi2, 2);
-				var dN911 = -2 * (1 - Math.Pow(ksi2, 2));
+				var dN111 = 1.0 / 2.0 * (1d + ksi2);
+				var dN211 = 1.0 / 2.0 * (1d + ksi2);
+				var dN311 = 1.0 / 2.0 * (1d - ksi2);
+				var dN411 = 1.0 / 2.0 * (1d - ksi2);
+				var dN511 = -(1d + ksi2);
+				var dN611 = 0d;
+				var dN711 = (ksi2 - 1d);
+				var dN811 = 0d;
 
-				var dN112 = 1.0 / 4.0 * (1 - 2 * ksi2) * (1 - 2 * ksi1);
-				var dN212 = (1 - 2 * ksi2) * ksi1;
-				var dN312 = -1.0 / 4.0 * (1 - 2 * ksi2) * (1 + 2 * ksi1);
-				var dN412 = -(1 + 2 * ksi1) * ksi2;
-				var dN512 = 1.0 / 4.0 * (1 + 2 * ksi2) * (2 * ksi1 + 1);
-				var dN612 = -(1 + 2 * ksi2) * ksi1;
-				var dN712 = -1.0 / 4.0 * (1 + 2 * ksi2) * (1 - 2 * ksi1);
-				var dN812 = (1 - 2 * ksi1) * ksi2;
-				var dN912 = 4 * ksi1 * ksi2;
+				var dN12 = 1.0 / 4.0 * (ksi1 + 2d * ksi2) * (1d + ksi1);
+				var dN22 = 1.0 / 4.0 * (-ksi1 + 2d * ksi2) * (1d - ksi1);
+				var dN32 = 1.0 / 4.0 * (ksi1 + 2d * ksi2) * (1d - ksi1);
+				var dN42 = 1.0 / 4.0 * (-ksi1 + 2d * ksi2) * (1d + ksi1);
+				var dN52 = 1.0 / 2.0 * (1d - Math.Pow(ksi1, 2));
+				var dN62 = -(1d - ksi1) * ksi2;
+				var dN72 = -1.0 / 2.0 * (1d - Math.Pow(ksi1, 2));
+				var dN82 = -(1d + ksi1) * ksi2;
 
-				var dN12 = 1.0 / 4.0 * ksi1 * (1 - ksi1) * (1 - 2 * ksi2);
-				var dN22 = -1.0 / 2.0 * (1 - Math.Pow(ksi1, 2)) * (1 - 2 * ksi2);
-				var dN32 = -1.0 / 4.0 * ksi1 * (1 + ksi1) * (1 - 2 * ksi2);
-				var dN42 = -(ksi1 + 1) * ksi2 * ksi1;
-				var dN52 = 1.0 / 4.0 * ksi1 * (1 + ksi1) * (1 + 2 * ksi2);
-				var dN62 = 1.0 / 2.0 * (1 - Math.Pow(ksi1, 2)) * (1 + 2 * ksi2);
-				var dN72 = -1.0 / 4.0 * ksi1 * (1 - ksi1) * (1 + 2 * ksi2);
-				var dN82 = (1 - ksi1) * ksi1 * ksi2;
-				var dN92 = -2 * ksi2 * (1 - Math.Pow(ksi1, 2));
+				var dN122 = 1.0 / 2.0 * (1d + ksi1);
+				var dN222 = 1.0 / 2.0 * (1d - ksi1);
+				var dN322 = 1.0 / 2.0 * (1d - ksi1);
+				var dN422 = 1.0 / 2.0 * (1d + ksi1);
+				var dN522 = 0d;
+				var dN622 = ksi1 - 1d;
+				var dN722 = 0d;
+				var dN822 = -1d - ksi1;
 
-				var dN122 = -1.0 / 2.0 * ksi1 * (1 - ksi1);
-				var dN222 = 1 - Math.Pow(ksi1, 2);
-				var dN322 = 1.0 / 2.0 * ksi1 * (1 + ksi1);
-				var dN422 = -(ksi1 + 1) * ksi1;
-				var dN522 = 1.0 / 2.0 * ksi1 * (1 + ksi1);
-				var dN622 = 1 - Math.Pow(ksi1, 2);
-				var dN722 = -1.0 / 2.0 * ksi1 * (1 - ksi1);
-				var dN822 = (1 - ksi1) * ksi1;
-				var dN922 = -2 * (1 - Math.Pow(ksi1, 2));
+				var dN112 = 1.0 / 4.0 * (2d * ksi1 + 2d * ksi2 + 1d);
+				var dN212 = 1.0 / 4.0 * (2d * ksi1 - 2d * ksi2 - 1d);
+				var dN312 = 1.0 / 4.0 * (-2d * ksi1 - 2d * ksi2 + 1d);
+				var dN412 = 1.0 / 4.0 * (-2d * ksi1 + 2d * ksi2 - 1d);
+				var dN512 = -ksi1;
+				var dN612 = ksi2;
+				var dN712 = ksi1;
+				var dN812 = -ksi2;
 
-				var dN103 = 1.0 / 4.0 * ksi4 * (1 - ksi4) * (1 - 2 * ksi3);
-				var dN113 = (1 - ksi4) * ksi3 * ksi4;
-				var dN123 = -1.0 / 4.0 * ksi4 * (1 - ksi4) * (1 + 2 * ksi3);
-				var dN133 = 1.0 / 2.0 * (1 + 2 * ksi3) * (1 - Math.Pow(ksi4, 2));
-				var dN143 = 1.0 / 4.0 * ksi4 * (1 + ksi4) * (2 * ksi3 + 1);
-				var dN153 = -(ksi4 + 1) * ksi3 * ksi4;
-				var dN163 = -1.0 / 4.0 * ksi4 * (1 + ksi4) * (1 - 2 * ksi3);
-				var dN173 = -1.0 / 2.0 * (1 - 2 * ksi3) * (1 - Math.Pow(ksi4, 2));
-				var dN183 = -2 * ksi3 * (1 - Math.Pow(ksi4, 2));
+				var N9 = 1.0 / 4.0 * (1d + ksi3) * (1d + ksi4) - 1.0 / 4.0 * (1d + ksi3) * (1 - ksi4 * ksi4) - 1.0 / 4.0 * (1d - ksi3 * ksi3) * (1d + ksi4);
+				var N10 = 1.0 / 4.0 * (1d - ksi3) * (1d + ksi4) - 1.0 / 4.0 * (1d - ksi3 * ksi3) * (1 + ksi4) - 1.0 / 4.0 * (1d - ksi3) * (1d - ksi4 * ksi4);
+				var N11 = 1.0 / 4.0 * (1d - ksi3) * (1d - ksi4) - 1.0 / 4.0 * (1d - ksi3 * ksi3) * (1 - ksi4) - 1.0 / 4.0 * (1d - ksi3) * (1d - ksi4 * ksi4);
+				var N12 = 1.0 / 4.0 * (1d + ksi3) * (1d - ksi4) - 1.0 / 4.0 * (1d - ksi3 * ksi3) * (1 - ksi4) - 1.0 / 4.0 * (1d + ksi3) * (1d - ksi4 * ksi4);
+				var N13 = 1.0 / 2.0 * (1d - ksi3 * ksi3) * (1d + ksi4);
+				var N14 = 1.0 / 2.0 * (1d - ksi3) * (1d - ksi4 * ksi4);
+				var N15 = 1.0 / 2.0 * (1d - ksi3 * ksi3) * (1d - ksi4);
+				var N16 = 1.0 / 2.0 * (1d + ksi3) * (1d - ksi4 * ksi4);
 
-				var dN1033 = -1.0 / 2.0 * ksi4 * (1 - ksi4);
-				var dN1133 = (1 - ksi4) * ksi4;
-				var dN1233 = -1.0 / 2.0 * ksi4 * (1 - ksi4);
-				var dN1333 = 1 - Math.Pow(ksi4, 2);
-				var dN1433 = 1.0 / 2.0 * ksi4 * (1 + ksi4);
-				var dN1533 = -(ksi4 + 1) * ksi4;
-				var dN1633 = 1.0 / 2.0 * ksi4 * (1 + ksi4);
-				var dN1733 = 1 - Math.Pow(ksi4, 2);
-				var dN1833 = -2 * (1 - Math.Pow(ksi4, 2));
+				var dN93 = 1.0 / 4.0 * (2d * ksi3 + ksi4) * (1d + ksi4);
+				var dN103 = 1.0 / 4.0 * (2d * ksi3 - ksi4) * (1d + ksi4);
+				var dN113 = 1.0 / 4.0 * (2d * ksi3 + ksi4) * (1d - ksi4);
+				var dN123 = 1.0 / 4.0 * (2d * ksi3 - ksi4) * (1d - ksi4);
+				var dN133 = -ksi3 * (1d + ksi4);
+				var dN143 = -1.0 / 2.0 * (1d - ksi4 * ksi4);
+				var dN153 = -ksi3 * (1d - ksi4);
+				var dN163 = 1.0 / 2.0 * (1d - ksi4 * ksi4);
 
-				var dN104 = 1.0 / 4.0 * ksi3 * (1 - ksi3) * (1 - 2 * ksi4);
-				var dN114 = -1.0 / 2.0 * (1 - Math.Pow(ksi3, 2)) * (1 - 2 * ksi4);
-				var dN124 = -1.0 / 4.0 * ksi3 * (1 + ksi3) * (1 - 2 * ksi4);
-				var dN134 = -(ksi3 + 1) * ksi4 * ksi3;
-				var dN144 = 1.0 / 4.0 * ksi3 * (1 + ksi3) * (1 + 2 * ksi4);
-				var dN154 = 1.0 / 2.0 * (1 - Math.Pow(ksi3, 2)) * (1 + 2 * ksi4);
-				var dN164 = -1.0 / 4.0 * ksi3 * (1 - ksi3) * (1 + 2 * ksi4);
-				var dN174 = (1 - ksi3) * ksi3 * ksi4;
-				var dN184 = -2 * ksi4 * (1 - Math.Pow(ksi3, 2));
+				var dN933 = 1.0 / 2.0 * (1d + ksi4);
+				var dN1033 = 1.0 / 2.0 * (1d + ksi4);
+				var dN1133 = 1.0 / 2.0 * (1d - ksi4);
+				var dN1233 = 1.0 / 2.0 * (1d - ksi4);
+				var dN1333 = -(1d + ksi4);
+				var dN1433 = 0d;
+				var dN1533 = (ksi4 - 1d);
+				var dN1633 = 0d;
 
-				var dN1044 = -1.0 / 2.0 * ksi3 * (1 - ksi3);
-				var dN1144 = 1 - Math.Pow(ksi3, 2);
-				var dN1244 = 1.0 / 2.0 * ksi3 * (1 + ksi3);
-				var dN1344 = -(ksi3 + 1) * ksi3;
-				var dN1444 = 1.0 / 2.0 * ksi3 * (1 + ksi3);
-				var dN1544 = 1 - Math.Pow(ksi3, 2);
-				var dN1644 = -1.0 / 2.0 * ksi3 * (1 - ksi3);
-				var dN1744 = (1 - ksi3) * ksi3;
-				var dN1844 = -2 * (1 - Math.Pow(ksi3, 2));
+				var dN94 = 1.0 / 4.0 * (ksi3 + 2d * ksi4) * (1d + ksi3);
+				var dN104 = 1.0 / 4.0 * (-ksi3 + 2d * ksi4) * (1d - ksi3);
+				var dN114 = 1.0 / 4.0 * (ksi3 + 2d * ksi4) * (1d - ksi3);
+				var dN124 = 1.0 / 4.0 * (-ksi3 + 2d * ksi4) * (1d + ksi3);
+				var dN134 = 1.0 / 2.0 * (1d - Math.Pow(ksi3, 2));
+				var dN144 = -(1d - ksi3) * ksi4;
+				var dN154 = -1.0 / 2.0 * (1d - Math.Pow(ksi3, 2));
+				var dN164 = -(1d + ksi3) * ksi4;
+
+				var dN944 = 1.0 / 2.0 * (1d + ksi3);
+				var dN1044 = 1.0 / 2.0 * (1d - ksi3);
+				var dN1144 = 1.0 / 2.0 * (1d - ksi3);
+				var dN1244 = 1.0 / 2.0 * (1d + ksi3);
+				var dN1344 = 0d;
+				var dN1444 = ksi3 - 1d;
+				var dN1544 = 0d;
+				var dN1644 = -1d - ksi3;
 
 				var aMatrix = new double[,]
 					{
-					{ -N1 ,0.0, 0.0 ,-N2 ,0.0 ,0.0 ,-N3, 0.0, 0.0, -N4, 0.0, 0.0, -N5 ,0.0, 0.0 , -N6, 0.0 ,0.0 , -N7, 0.0, 0.0, -N8, 0.0, 0.0, -N9, 0.0, 0.0, N10, 0.0, 0.0, N11, 0.0, 0.0, N12, 0.0, 0.0, N13, 0.0, 0.0, N14, 0.0, 0.0, N15, 0.0, 0.0, N16, 0.0, 0.0, N17, 0.0, 0.0, N18, 0.0, 0.0 },
-					{ 0.0, -N1 ,0.0, 0.0 ,-N2 ,0.0 ,0.0 ,-N3, 0.0, 0.0, -N4, 0.0, 0.0, -N5 ,0.0, 0.0 , -N6, 0.0 ,0.0 , -N7, 0.0, 0.0, -N8, 0.0,0.0, -N9, 0.0, 0.0, N10, 0.0, 0.0, N11, 0.0, 0.0, N12, 0.0, 0.0, N13, 0.0, 0.0, N14, 0.0, 0.0, N15, 0.0, 0.0, N16, 0.0, 0.0, N17, 0.0, 0.0, N18, 0.0 },
-					{ 0.0, 0.0, -N1 ,0.0, 0.0 ,-N2 ,0.0 ,0.0 ,-N3, 0.0, 0.0, -N4, 0.0, 0.0, -N5 ,0.0, 0.0 , -N6, 0.0 ,0.0 , -N7, 0.0, 0.0, -N8, 0.0, 0.0, -N9, 0.0, 0.0, N10, 0.0, 0.0, N11, 0.0, 0.0, N12, 0.0, 0.0, N13, 0.0, 0.0, N14, 0.0, 0.0, N15, 0.0, 0.0, N16, 0.0, 0.0, N17, 0.0, 0.0, N18 }
+					{ -N1 ,0.0, 0.0 ,-N2 ,0.0 ,0.0 ,-N3, 0.0, 0.0, -N4, 0.0, 0.0, -N5 ,0.0, 0.0 , -N6, 0.0 ,0.0 , -N7, 0.0, 0.0, -N8, 0.0, 0.0, N9, 0.0, 0.0, N10, 0.0, 0.0, N11, 0.0, 0.0, N12, 0.0, 0.0, N13, 0.0, 0.0, N14, 0.0, 0.0, N15, 0.0, 0.0, N16, 0.0, 0.0 },
+					{ 0.0, -N1 ,0.0, 0.0 ,-N2 ,0.0 ,0.0 ,-N3, 0.0, 0.0, -N4, 0.0, 0.0, -N5 ,0.0, 0.0 , -N6, 0.0 ,0.0 , -N7, 0.0, 0.0, -N8, 0.0,0.0, N9, 0.0, 0.0, N10, 0.0, 0.0, N11, 0.0, 0.0, N12, 0.0, 0.0, N13, 0.0, 0.0, N14, 0.0, 0.0, N15, 0.0, 0.0, N16, 0.0 },
+					{ 0.0, 0.0, -N1 ,0.0, 0.0 ,-N2 ,0.0 ,0.0 ,-N3, 0.0, 0.0, -N4, 0.0, 0.0, -N5 ,0.0, 0.0 , -N6, 0.0 ,0.0 , -N7, 0.0, 0.0, -N8, 0.0, 0.0, N9, 0.0, 0.0, N10, 0.0, 0.0, N11, 0.0, 0.0, N12, 0.0, 0.0, N13, 0.0, 0.0, N14, 0.0, 0.0, N15, 0.0, 0.0, N16 }
 					};
 
 				var da1Matrix = new double[,]
 					{
-					{ -dN11 ,0.0, 0.0 ,-dN21 ,0.0 ,0.0 ,-dN31, 0.0, 0.0, -dN41, 0.0, 0.0, -dN51 ,0.0, 0.0 , -dN61, 0.0 ,0.0 , -dN71, 0.0, 0.0, -dN81, 0.0, 0.0, -dN91, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, -dN11 ,0.0, 0.0 ,-dN21 ,0.0 ,0.0 ,-dN31, 0.0, 0.0, -dN41, 0.0, 0.0, -dN51 ,0.0, 0.0 , -dN61, 0.0 ,0.0 , -dN71, 0.0, 0.0, -dN81, 0.0,0.0, -dN91, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, 0.0, -dN11 ,0.0, 0.0 ,-dN21 ,0.0 ,0.0 ,-dN31, 0.0, 0.0, -dN41, 0.0, 0.0, -dN51 ,0.0, 0.0 , -dN61, 0.0 ,0.0 , -dN71, 0.0, 0.0, -dN81, 0.0, 0.0, -dN91, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
+					{ -dN11 ,0.0, 0.0 ,-dN21 ,0.0 ,0.0 ,-dN31, 0.0, 0.0, -dN41, 0.0, 0.0, -dN51 ,0.0, 0.0 , -dN61, 0.0 ,0.0 , -dN71, 0.0, 0.0, -dN81, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, -dN11 ,0.0, 0.0 ,-dN21 ,0.0 ,0.0 ,-dN31, 0.0, 0.0, -dN41, 0.0, 0.0, -dN51 ,0.0, 0.0 , -dN61, 0.0 ,0.0 , -dN71, 0.0, 0.0, -dN81, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, 0.0, -dN11 ,0.0, 0.0 ,-dN21 ,0.0 ,0.0 ,-dN31, 0.0, 0.0, -dN41, 0.0, 0.0, -dN51 ,0.0, 0.0 , -dN61, 0.0 ,0.0 , -dN71, 0.0, 0.0, -dN81, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
 					};
 
 				var da11Matrix = new double[,]
 					{
-					{ -dN111 ,0.0, 0.0 ,-dN211 ,0.0 ,0.0 ,-dN311, 0.0, 0.0, -dN411, 0.0, 0.0, -dN511 ,0.0, 0.0 , -dN611, 0.0 ,0.0 , -dN711, 0.0, 0.0, -dN811, 0.0, 0.0, -dN911, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, -dN111 ,0.0, 0.0 ,-dN211 ,0.0 ,0.0 ,-dN311, 0.0, 0.0, -dN411, 0.0, 0.0, -dN511 ,0.0, 0.0 , -dN611, 0.0 ,0.0 , -dN711, 0.0, 0.0, -dN811, 0.0,0.0, -dN911, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0  },
-					{ 0.0, 0.0, -dN111 ,0.0, 0.0 ,-dN211 ,0.0 ,0.0 ,-dN311, 0.0, 0.0, -dN411, 0.0, 0.0, -dN511 ,0.0, 0.0 , -dN611, 0.0 ,0.0 , -dN711, 0.0, 0.0, -dN811, 0.0, 0.0, -dN911, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
+					{ -dN111 ,0.0, 0.0 ,-dN211 ,0.0 ,0.0 ,-dN311, 0.0, 0.0, -dN411, 0.0, 0.0, -dN511 ,0.0, 0.0 , -dN611, 0.0 ,0.0 , -dN711, 0.0, 0.0, -dN811, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, -dN111 ,0.0, 0.0 ,-dN211 ,0.0 ,0.0 ,-dN311, 0.0, 0.0, -dN411, 0.0, 0.0, -dN511 ,0.0, 0.0 , -dN611, 0.0 ,0.0 , -dN711, 0.0, 0.0, -dN811, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0  },
+					{ 0.0, 0.0, -dN111 ,0.0, 0.0 ,-dN211 ,0.0 ,0.0 ,-dN311, 0.0, 0.0, -dN411, 0.0, 0.0, -dN511 ,0.0, 0.0 , -dN611, 0.0 ,0.0 , -dN711, 0.0, 0.0, -dN811, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
 					};
 
 				var da12Matrix = new double[,]
 					{
-					{ -dN112 ,0.0, 0.0 ,-dN212 ,0.0 ,0.0 ,-dN312, 0.0, 0.0, -dN412, 0.0, 0.0, -dN512 ,0.0, 0.0 , -dN612, 0.0 ,0.0 , -dN712, 0.0, 0.0, -dN812, 0.0, 0.0, -dN912, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, -dN112 ,0.0, 0.0 ,-dN212 ,0.0 ,0.0 ,-dN312, 0.0, 0.0, -dN412, 0.0, 0.0, -dN512 ,0.0, 0.0 , -dN612, 0.0 ,0.0 , -dN712, 0.0, 0.0, -dN812, 0.0,0.0, -dN912, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0  },
-					{ 0.0, 0.0, -dN112 ,0.0, 0.0 ,-dN212 ,0.0 ,0.0 ,-dN312, 0.0, 0.0, -dN412, 0.0, 0.0, -dN512 ,0.0, 0.0 , -dN612, 0.0 ,0.0 , -dN712, 0.0, 0.0, -dN812, 0.0, 0.0, -dN912, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
+					{ -dN112 ,0.0, 0.0 ,-dN212 ,0.0 ,0.0 ,-dN312, 0.0, 0.0, -dN412, 0.0, 0.0, -dN512 ,0.0, 0.0 , -dN612, 0.0 ,0.0 , -dN712, 0.0, 0.0, -dN812, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, -dN112 ,0.0, 0.0 ,-dN212 ,0.0 ,0.0 ,-dN312, 0.0, 0.0, -dN412, 0.0, 0.0, -dN512 ,0.0, 0.0 , -dN612, 0.0 ,0.0 , -dN712, 0.0, 0.0, -dN812, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0  },
+					{ 0.0, 0.0, -dN112 ,0.0, 0.0 ,-dN212 ,0.0 ,0.0 ,-dN312, 0.0, 0.0, -dN412, 0.0, 0.0, -dN512 ,0.0, 0.0 , -dN612, 0.0 ,0.0 , -dN712, 0.0, 0.0, -dN812, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
 					};
 
 				var da2Matrix = new double[,]
 					{
-					{ -dN12 ,0.0, 0.0 ,-dN22 ,0.0 ,0.0 ,-dN32, 0.0, 0.0, -dN42, 0.0, 0.0, -dN52 ,0.0, 0.0 , -dN62, 0.0 ,0.0 , -dN72, 0.0, 0.0, -dN82, 0.0, 0.0, -dN92, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, -dN12 ,0.0, 0.0 ,-dN22 ,0.0 ,0.0 ,-dN32, 0.0, 0.0, -dN42, 0.0, 0.0, -dN52 ,0.0, 0.0 , -dN62, 0.0 ,0.0 , -dN72, 0.0, 0.0, -dN82, 0.0,0.0, -dN92, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, 0.0, -dN12 ,0.0, 0.0 ,-dN22 ,0.0 ,0.0 ,-dN32, 0.0, 0.0, -dN42, 0.0, 0.0, -dN52 ,0.0, 0.0 , -dN62, 0.0 ,0.0 , -dN72, 0.0, 0.0, -dN82, 0.0, 0.0, -dN92, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
+					{ -dN12 ,0.0, 0.0 ,-dN22 ,0.0 ,0.0 ,-dN32, 0.0, 0.0, -dN42, 0.0, 0.0, -dN52 ,0.0, 0.0 , -dN62, 0.0 ,0.0 , -dN72, 0.0, 0.0, -dN82, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, -dN12 ,0.0, 0.0 ,-dN22 ,0.0 ,0.0 ,-dN32, 0.0, 0.0, -dN42, 0.0, 0.0, -dN52 ,0.0, 0.0 , -dN62, 0.0 ,0.0 , -dN72, 0.0, 0.0, -dN82, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, 0.0, -dN12 ,0.0, 0.0 ,-dN22 ,0.0 ,0.0 ,-dN32, 0.0, 0.0, -dN42, 0.0, 0.0, -dN52 ,0.0, 0.0 , -dN62, 0.0 ,0.0 , -dN72, 0.0, 0.0, -dN82, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
 					};
 
 				var da22Matrix = new double[,]
 					{
-					{ -dN122 ,0.0, 0.0 ,-dN222 ,0.0 ,0.0 ,-dN322, 0.0, 0.0, -dN422, 0.0, 0.0, -dN522 ,0.0, 0.0 , -dN622, 0.0 ,0.0 , -dN722, 0.0, 0.0, -dN822, 0.0, 0.0, -dN922,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, -dN122 ,0.0, 0.0 ,-dN222 ,0.0 ,0.0 ,-dN322, 0.0, 0.0, -dN422, 0.0, 0.0, -dN522 ,0.0, 0.0 , -dN622, 0.0 ,0.0 , -dN722, 0.0, 0.0, -dN822, 0.0,0.0, -dN922, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-					{ 0.0, 0.0, -dN122 ,0.0, 0.0 ,-dN222 ,0.0 ,0.0 ,-dN322, 0.0, 0.0, -dN422, 0.0, 0.0, -dN522 ,0.0, 0.0 , -dN622, 0.0 ,0.0 , -dN722, 0.0, 0.0, -dN822, 0.0, 0.0, -dN922, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
+					{ -dN122 ,0.0, 0.0 ,-dN222 ,0.0 ,0.0 ,-dN322, 0.0, 0.0, -dN422, 0.0, 0.0, -dN522 ,0.0, 0.0 , -dN622, 0.0 ,0.0 , -dN722, 0.0, 0.0, -dN822, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, -dN122 ,0.0, 0.0 ,-dN222 ,0.0 ,0.0 ,-dN322, 0.0, 0.0, -dN422, 0.0, 0.0, -dN522 ,0.0, 0.0 , -dN622, 0.0 ,0.0 , -dN722, 0.0, 0.0, -dN822, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+					{ 0.0, 0.0, -dN122 ,0.0, 0.0 ,-dN222 ,0.0 ,0.0 ,-dN322, 0.0, 0.0, -dN422, 0.0, 0.0, -dN522 ,0.0, 0.0 , -dN622, 0.0 ,0.0 , -dN722, 0.0, 0.0, -dN822, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
 					};
 
 				var da3Matrix = new double[,]
 					{
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN103, 0.0, 0.0, dN113, 0.0, 0.0, dN123, 0.0, 0.0, dN133, 0.0, 0.0, dN143, 0.0, 0.0, dN153, 0.0, 0.0, dN163, 0.0, 0.0, dN173, 0.0, 0.0, dN183, 0.0, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, dN103, 0.0, 0.0, dN113, 0.0, 0.0, dN123, 0.0, 0.0, dN133, 0.0, 0.0, dN143, 0.0, 0.0, dN153, 0.0, 0.0, dN163, 0.0, 0.0, dN173, 0.0, 0.0, dN183, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, dN103, 0.0, 0.0, dN113, 0.0, 0.0, dN123, 0.0, 0.0, dN133, 0.0, 0.0, dN143, 0.0, 0.0, dN153, 0.0, 0.0, dN163, 0.0, 0.0, dN173, 0.0, 0.0, dN183 }
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN93, 0.0, 0.0, dN103, 0.0, 0.0, dN113, 0.0, 0.0, dN123, 0.0, 0.0, dN133, 0.0, 0.0, dN143, 0.0, 0.0, dN153, 0.0, 0.0, dN163, 0.0, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, dN93, 0.0, 0.0, dN103, 0.0, 0.0, dN113, 0.0, 0.0, dN123, 0.0, 0.0, dN133, 0.0, 0.0, dN143, 0.0, 0.0, dN153, 0.0, 0.0, dN163, 0.0 },
+					{0.0, 0.0, 0.0,  0.0, 0.0, 0.0, 0.0 ,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, dN93, 0.0, 0.0, dN103, 0.0, 0.0, dN113, 0.0, 0.0, dN123, 0.0, 0.0, dN133, 0.0, 0.0, dN143, 0.0, 0.0, dN153, 0.0, 0.0, dN163 }
 					};
 
 				var da33Matrix = new double[,]
 					{
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN1033, 0.0, 0.0, dN1133, 0.0, 0.0, dN1233, 0.0, 0.0, dN1333, 0.0, 0.0, dN1433, 0.0, 0.0, dN1533, 0.0, 0.0, dN1633, 0.0, 0.0, dN1733, 0.0, 0.0, dN1833, 0.0, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, dN1033, 0.0, 0.0, dN1133, 0.0, 0.0, dN1233, 0.0, 0.0, dN1333, 0.0, 0.0, dN1433, 0.0, 0.0, dN1533, 0.0, 0.0, dN1633, 0.0, 0.0, dN1733, 0.0, 0.0, dN1833, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, dN1033, 0.0, 0.0, dN1133, 0.0, 0.0, dN1233, 0.0, 0.0, dN1333, 0.0, 0.0, dN1433, 0.0, 0.0, dN1533, 0.0, 0.0, dN1633, 0.0, 0.0, dN1733, 0.0, 0.0, dN1833 }
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN933, 0.0, 0.0, dN1033, 0.0, 0.0, dN1133, 0.0, 0.0, dN1233, 0.0, 0.0, dN1333, 0.0, 0.0, dN1433, 0.0, 0.0, dN1533, 0.0, 0.0, dN1633, 0.0, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, dN933, 0.0, 0.0, dN1033, 0.0, 0.0, dN1133, 0.0, 0.0, dN1233, 0.0, 0.0, dN1333, 0.0, 0.0, dN1433, 0.0, 0.0, dN1533, 0.0, 0.0, dN1633, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, dN933, 0.0, 0.0, dN1033, 0.0, 0.0, dN1133, 0.0, 0.0, dN1233, 0.0, 0.0, dN1333, 0.0, 0.0, dN1433, 0.0, 0.0, dN1533, 0.0, 0.0, dN1633 }
 					};
 
 				var da4Matrix = new double[,]
 					{
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN104, 0.0, 0.0, dN114, 0.0, 0.0, dN124, 0.0, 0.0, dN134, 0.0, 0.0, dN144, 0.0, 0.0, dN154, 0.0, 0.0, dN164, 0.0, 0.0, dN174, 0.0, 0.0, dN184, 0.0, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, dN104, 0.0, 0.0, dN114, 0.0, 0.0, dN124, 0.0, 0.0, dN134, 0.0, 0.0, dN144, 0.0, 0.0, dN154, 0.0, 0.0, dN164, 0.0, 0.0, dN174, 0.0, 0.0, dN184, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, dN104, 0.0, 0.0, dN114, 0.0, 0.0, dN124, 0.0, 0.0, dN134, 0.0, 0.0, dN144, 0.0, 0.0, dN154, 0.0, 0.0, dN164, 0.0, 0.0, dN174, 0.0, 0.0, dN184 }
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN94, 0.0, 0.0, dN104, 0.0, 0.0, dN114, 0.0, 0.0, dN124, 0.0, 0.0, dN134, 0.0, 0.0, dN144, 0.0, 0.0, dN154, 0.0, 0.0, dN164, 0.0, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, dN94, 0.0, 0.0, dN104, 0.0, 0.0, dN114, 0.0, 0.0, dN124, 0.0, 0.0, dN134, 0.0, 0.0, dN144, 0.0, 0.0, dN154, 0.0, 0.0, dN164, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, dN94, 0.0, 0.0, dN104, 0.0, 0.0, dN114, 0.0, 0.0, dN124, 0.0, 0.0, dN134, 0.0, 0.0, dN144, 0.0, 0.0, dN154, 0.0, 0.0, dN164 }
 					};
 
 				var da44Matrix = new double[,]
 					{
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN1044, 0.0, 0.0, dN1144, 0.0, 0.0, dN1244, 0.0, 0.0, dN1344, 0.0, 0.0, dN1444, 0.0, 0.0, dN1544, 0.0, 0.0, dN1644, 0.0, 0.0, dN1744, 0.0, 0.0, dN1844, 0.0, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, dN1044, 0.0, 0.0, dN1144, 0.0, 0.0, dN1244, 0.0, 0.0, dN1344, 0.0, 0.0, dN1444, 0.0, 0.0, dN1544, 0.0, 0.0, dN1644, 0.0, 0.0, dN1744, 0.0, 0.0, dN1844, 0.0 },
-					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, dN1044, 0.0, 0.0, dN1144, 0.0, 0.0, dN1244, 0.0, 0.0, dN1344, 0.0, 0.0, dN1444, 0.0, 0.0, dN1544, 0.0, 0.0, dN1644, 0.0, 0.0, dN1744, 0.0, 0.0, dN1844 }
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, dN944, 0.0, 0.0, dN1044, 0.0, 0.0, dN1144, 0.0, 0.0, dN1244, 0.0, 0.0, dN1344, 0.0, 0.0, dN1444, 0.0, 0.0, dN1544, 0.0, 0.0, dN1644, 0.0, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, dN944, 0.0, 0.0, dN1044, 0.0, 0.0, dN1144, 0.0, 0.0, dN1244, 0.0, 0.0, dN1344, 0.0, 0.0, dN1444, 0.0, 0.0, dN1544, 0.0, 0.0, dN1644, 0.0 },
+					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,0.0, 0.0 , 0.0, 0.0 ,0.0 , 0.0, 0.0, 0.0, 0.0, 0.0,0.0, dN944, 0.0, 0.0, dN1044, 0.0, 0.0, dN1144, 0.0, 0.0, dN1244, 0.0, 0.0, dN1344, 0.0, 0.0, dN1444, 0.0, 0.0, dN1544, 0.0, 0.0, dN1644 }
 					};
 
 				var T1 = new Tuple<double[,], double[,], double[,], double[,], double[,]>(da1Matrix, da11Matrix, da2Matrix, da22Matrix, da12Matrix);
@@ -898,7 +855,7 @@ namespace MGroup.FEM.Structural.Line
 					{
 						{ surfaceVector1.DotProduct(surfaceVector1), surfaceVector1.DotProduct(surfaceVector2) },
 						{ surfaceVector2.DotProduct(surfaceVector1), surfaceVector2.DotProduct(surfaceVector2) }
-					};	
+					};
 			var detm = m[0, 0] * m[1, 1] - m[0, 1] * m[1, 0];
 			var mInv = new double[,]
 					{
@@ -1001,7 +958,7 @@ namespace MGroup.FEM.Structural.Line
 						surfaceVector1.DotProduct(surfaceVector1) - surfaceVectorDerivative11.DotProduct(masterSlaveRelativeVector)
 					}
 				};
-				var vector = new double[] 
+				var vector = new double[]
 				{
 					surfaceVector1.DotProduct(masterSlaveRelativeVector),
 					surfaceVector2.DotProduct(masterSlaveRelativeVector)
