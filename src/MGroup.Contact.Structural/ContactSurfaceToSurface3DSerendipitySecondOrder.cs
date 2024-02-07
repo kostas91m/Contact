@@ -23,7 +23,7 @@ namespace MGroup.FEM.Structural.Line
 		private IElementDofEnumerator dofEnumerator = new GenericDofEnumerator();
 		private double[] DisplacementVector { get; set; }
 		private double ContactArea { get; }
-		//private List<int> activeElements = new List<int>();
+		//develop branch
 		public ContactSurfaceToSurface3DSerendipitySecondOrder(IReadOnlyList<INode> nodes, double youngModulus, double penaltyFactorMultiplier, double contactArea)
 		{
 			if (nodes.Count != 8)
